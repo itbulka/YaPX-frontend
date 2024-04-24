@@ -12,7 +12,7 @@ export interface IPost {
     text: string,
     createdAd: string,
     user?: IUser,
-    likes?: Omit<IUser, 'name' | 'nickname' | 'createdAd'>
+    likes?: Omit<IUser, 'name' | 'nickname' | 'createdAd'>[]
 }
 
 export interface IFolower {
