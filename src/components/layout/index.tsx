@@ -1,26 +1,28 @@
-import { ReactElement } from "react";
-import Image from "next/image";
-import yapx from "../../../public/YaPX.svg";
 import Link from "next/link";
 
 export const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <section className="max-w-7xl border border-black min-h-24 ml-auto mr-auto px-10 py-8 gap-8 rounded-3xl flex flex-col">      
-      <nav className="border border-black rounded-2xl px-8 py-4 flex justify-between">
-        <Image src={yapx} alt={"yandex practicum experiment"} className="hover:cursor-pointer"/>
-        <div className="flex gap-[6px] self-center">
-          <Link href={"/login"}>
-            <button className="border border-black rounded-xl min-w-[100px]">Log in</button>
-          </Link>
-          <span className="inline-block self-center">/</span>
-          <Link href={"/registration"}>
-            <button className="border border-black rounded-xl min-w-[100px]">Sign up</button>
-          </Link>
+    <div>
+      <div className="border-b-[1px] border-gray-200 h-12">
+        <div className="px-52 flex justify-between items-center h-full">
+          <h1 className="font-semibold">YaPX</h1>
+          <nav className="flex gap-4">
+            <Link href={"/login"} className="text-slate-800 text-sm hover:text-black">Sign up</Link>
+            <Link href={"/login"} className="text-slate-800 text-sm hover:text-black">Log in</Link>
+          </nav>
         </div>
-      </nav>
-      <div className="border border-black rounded-2xl px-8 py-4 flex flex-col gap-3">
-        {children}
       </div>
-    </section>
+
+      <div className="px-52 pt-10 flex gap-20">
+        <nav className="flex flex-col gap-4">
+            <Link href={"/login"} className="text-slate-800 text-sm p-1 rounded-md transition ease-in duration-300 hover:transition-colors hover:text-white hover:bg-gray-950">Профиль</Link>
+            <Link href={"/login"} className="text-slate-800 text-sm p-1 rounded-md transition ease-in duration-300 hover:transition-colors hover:text-white hover:bg-gray-950">Посты</Link>
+            <Link href={"/login"} className="text-slate-800 text-sm p-1 rounded-md transition ease-in duration-300 hover:transition-colors hover:text-white hover:bg-gray-950">Настройки</Link>
+        </nav>
+        <div className="flex flex-1 flex-col gap-10 items-center justify-center">
+          {children}
+        </div>
+      </div>
+    </div>
   );
 }

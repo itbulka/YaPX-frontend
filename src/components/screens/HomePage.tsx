@@ -1,16 +1,26 @@
 import { Layout } from '../layout';
 import Link from 'next/link';
+import { getPosts } from '@/utils/api/posts';
+import { useQuery } from '@tanstack/react-query';
+import { Post } from '../Post/Post';
 
 export const HomePage = () => {
-  return (
-    <Layout>
-      <h1>Hello YaPX</h1>
-      <Link href={'/post/2'}>
-        <p>Very interestin POST</p>
-      </Link>
-      <Link href={'/post/4'}>
-        <p>Very interestin POST</p>
-      </Link>
-    </Layout>
-  );
+    const { data: posts} = useQuery({
+        queryKey: ['posts', null],
+        queryFn: getPosts
+    })
+
+    return (
+        <Layout>
+            {
+                posts?.map( (post) => {
+                    return (
+                        <Link key={post.id} href={`/post/${post.id}`}>
+                            <Post post={post} />
+                        </Link>
+                    )
+                })
+            }
+        </Layout>
+    );
 };
