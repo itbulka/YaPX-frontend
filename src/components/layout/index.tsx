@@ -15,7 +15,7 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
 
       <div className="px-52 pt-10 flex gap-20">
         <nav className="flex flex-col gap-4">
-            <Link href={"/login"} className="text-slate-800 text-sm p-1 rounded-md transition ease-in duration-300 hover:transition-colors hover:text-white hover:bg-gray-950">Профиль</Link>
+            <Link href={"/profile/12"} className="text-slate-800 text-sm p-1 rounded-md transition ease-in duration-300 hover:transition-colors hover:text-white hover:bg-gray-950">Профиль</Link>
             <Link href={"/login"} className="text-slate-800 text-sm p-1 rounded-md transition ease-in duration-300 hover:transition-colors hover:text-white hover:bg-gray-950">Посты</Link>
             <Link href={"/login"} className="text-slate-800 text-sm p-1 rounded-md transition ease-in duration-300 hover:transition-colors hover:text-white hover:bg-gray-950">Настройки</Link>
         </nav>
