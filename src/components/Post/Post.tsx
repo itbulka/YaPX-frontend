@@ -14,9 +14,9 @@ export const Post = (prop: Props) => {
   const text = post.text;
 
   return (
-    <article className="rounded-md p-4 shadow gap-2 flex flex-col">
+    <article className="rounded-md p-4 shadow gap-2 flex flex-col w-96">
       <div className='flex justify-between items-center'>
-        <h1 className="text-sm text-stone-400 hover:underline">{userName}</h1>
+        <Link href={`/profile/${post.user?.id ?? ''}`} className="text-sm text-stone-400 hover:underline">{userName}</Link>
         <p className="t text-xs text-stone-400">{created}</p>
       </div>
       <Link href={`/post/${post.id}`}>

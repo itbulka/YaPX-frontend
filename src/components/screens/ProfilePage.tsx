@@ -3,6 +3,9 @@ import { Layout } from "../layout";
 import { useQuery } from "@tanstack/react-query";
 import { getPosts } from "@/utils/api/posts";
 import { Post } from "../Post/Post";
+import { useState } from "react";
+import { getPostsFromUser, getUserById } from "@/utils/api/users";
+import { useRouter } from "next/router";
 
 interface Props {
     currentId: string
@@ -19,32 +22,40 @@ interface Props {
 // Если в localstorage нет id значит вообще не авторизованы и дизейблим все кнопки, но просматривать профиль другого юзера можно
 
 export const ProfilePage = ({currentId}: Props) => {
-    // Для теста
-    const { data: posts} = useQuery({
-        queryKey: ['posts', null],
-        queryFn: getPosts
+    const router = useRouter();
+    const idFromLocalStorage = ''
+    const isAuth = idFromLocalStorage || false;
+
+    const {data: user, status} = useQuery({
+        queryKey: ['user', null, currentId],
+        queryFn: async () => getUserById(currentId)
     })
 
-    // Мок данные
-    const idFromLocalStorage = '12'
-    const isAuth = idFromLocalStorage || false;
-    const isFollowing = true;
+    const {data: posts} = useQuery({
+        queryKey: ['postsUser', null, currentId],
+        queryFn: async () => getPostsFromUser(currentId)
+    })
+
+    const isFollowing = user?.followers?.find( follower => follower.id === idFromLocalStorage);
 
     return (
         <Layout>
-            <div className="w-full">
+            {status === 'pending' ? 'Loading' : null}
+
+            {status === 'success' ? (
+                <div className="w-full">
                 <div className="flex justify-between items-center">
                     <div>
                         <div className="flex items-center gap-[4px]">
-                            <h2 className="text-xl font-semibold text-stone-950">Ivan ivanov</h2>
-                            <p className="text-xs text-slate-800">Иван Иванов</p>
+                            <h2 className="text-xl font-semibold text-stone-950">{user?.nickname ?? 'anonymous'}</h2>
+                            <p className="text-xs text-slate-800">{user?.name ?? 'anonymous'}</p>
                         </div>
-                        <p className="text-sm fonst-regular">12k. followers</p>
-                        <p className="text-sm fonst-regular">46 posts</p>
+                        <p className="text-sm fonst-regular">{`${user?.followers?.length ?? 0} followers`}</p>
+                        <p className="text-sm fonst-regular">{`${posts?.length ?? 0} posts`}</p>
                     </div>
                     { 
-                        idFromLocalStorage === currentId 
-                            ? <button className="transition ease-in-out duration-300 py-[2px] px-[6px] border border-black rounded-tl-lg rounded-br-lg hover:transition-colors hover:bg-black hover:text-white">{isFollowing ? 'Unfollowing' : 'Following'}</button> 
+                        !(idFromLocalStorage === currentId) 
+                            ? isAuth ? <button className="transition ease-in-out duration-300 py-[2px] px-[6px] border border-black rounded-tl-lg rounded-br-lg hover:transition-colors hover:bg-black hover:text-white">{isFollowing ? 'Unfollowing' : 'Following'}</button> : null
                             : <Link href={'/'} className="transition ease-in-out duration-300 py-[2px] px-[6px] border border-black rounded-tl-lg rounded-br-lg hover:transition-colors hover:bg-black hover:text-white">Settings</Link>
                     }
                 </div>
@@ -61,6 +72,7 @@ export const ProfilePage = ({currentId}: Props) => {
                     }
                 </div>
             </div>
+            ) : null}
         </Layout>
     );
 };
