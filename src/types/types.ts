@@ -10,7 +10,7 @@ export interface IUser {
 export interface IPost {
     id: string,
     text: string,
-    createdAd: string,
+    createdAt: string,
     user?: IUser,
     likes?: Omit<IUser, 'name' | 'nickname' | 'createdAd'>[]
 }
