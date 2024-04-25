@@ -4,10 +4,11 @@ import { useState } from "react";
 
 export default function Profile() {
   const router = useRouter();
+  const id = router.query.id;
 
   return (
     <>
-      <ProfilePage currentId={'12'} />
+      <ProfilePage currentId={id as string} />
     </>
   );
 }
