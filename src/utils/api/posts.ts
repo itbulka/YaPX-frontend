@@ -5,8 +5,8 @@ export interface ICreatePostData {
     text: string
 }
 
-export async function getPosts() {
-    const res = await fetch(`${url}/posts`, {
+export async function getPosts(page: number, perPage: number) {
+    const res = await fetch(`${url}/posts?page=${page}&per-page=${perPage}&with=user&with=likes`, {
       method: 'GET',
       headers: {
         accept: 'application/json',
@@ -60,7 +60,7 @@ export async function getPostsFollowing() {
 }
 
 export async function getPostById(postId: string) {
-    const res = await fetch(`${url}/posts/${postId}`, {
+    const res = await fetch(`${url}/posts/${postId}?with=user&with=likes`, {
       method: 'GET',
       headers: {
         accept: 'application/json',
