@@ -38,6 +38,7 @@ export async function signIn(form: ISignInData) {
 
     const data = await res.json();
 
+    localStorage.setItem('userId', data.userId);
     return data as IUserAuth;
 }
 
