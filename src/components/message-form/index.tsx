@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
-import { useUserStatus } from '../../slice/zustand';
+import { useUserStore } from '../../store/user';
 import { useMutation } from '@tanstack/react-query';
 import { createPost } from '@/utils/api/posts';
 
@@ -17,7 +17,7 @@ type Form = z.infer<typeof formSchema>;
 
 export default function MessageForm() {
   const router = useRouter();
-  const setUserId = useUserStatus(state => state.setUserId);
+  const setUserId = useUserStore(state => state.setUserId);
 
   const [success, setSuccess] = useState(false);
 

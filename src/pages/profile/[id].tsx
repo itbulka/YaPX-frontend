@@ -1,7 +1,7 @@
 import { Post } from '@/components/Post/Post';
 import { Layout } from '@/components/layout';
 import MessageForm from '@/components/message-form';
-import { useUserStatus } from '@/slice/zustand';
+import { useUserStore } from '@/store/user';
 import { getPostsFromUser, getUserById } from '@/utils/api/users';
 import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
@@ -12,7 +12,7 @@ export default function Profile() {
   const router = useRouter();
   const id = router.query.id as string;
 
-  const userId = useUserStatus(state => state.userId);
+  const userId = useUserStore(state => state.userId);
   const [isFollowing, setFollowing] = useState(false);
 
   const { data: user, status } = useQuery({

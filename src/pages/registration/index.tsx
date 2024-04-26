@@ -6,7 +6,7 @@ import { z } from 'zod';
 import { signUp } from '@/utils/api/auth';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
-import { useUserStatus } from '../../slice/zustand';
+import { useUserStore } from '../../store/user';
 import { useMutation } from '@tanstack/react-query';
 
 const formSchema = z.object({
@@ -19,7 +19,7 @@ type Form = z.infer<typeof formSchema>;
 
 export default function RegistationForm() {
   const router = useRouter();
-  const setUserId = useUserStatus(state => state.setUserId);
+  const setUserId = useUserStore(state => state.setUserId);
   const [success, setSuccess] = useState(false);
 
   const loginMutation = useMutation({

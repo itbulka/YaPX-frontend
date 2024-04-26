@@ -1,4 +1,4 @@
-import { useUserStatus } from '@/slice/zustand';
+import { useUserStore } from '@/store/user';
 import { Post as PostType } from '@/models/types';
 import { cn } from '@/utils/cn';
 import Link from 'next/link';
@@ -8,7 +8,7 @@ export type Props = {
 };
 
 export const Post = ({ post }: Props) => {
-  const userId = useUserStatus(state => state.userId);
+  const userId = useUserStore(state => state.userId);
   const userName = post.user?.nickname ?? 'anonymous';
   const created = post.createdAt
     ? new Date(post.createdAt).toLocaleDateString('ru-RU', { hour: 'numeric', minute: 'numeric' })

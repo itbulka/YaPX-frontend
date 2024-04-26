@@ -1,11 +1,11 @@
-import { useUserStatus } from '@/slice/zustand';
+import { useUserStore } from '@/store/user';
 import { signOut } from '@/utils/api/auth';
 import { useMutation } from '@tanstack/react-query';
 import Link from 'next/link';
 
 export const Layout = ({ children }: { children: React.ReactNode }) => {
-  const userId = useUserStatus(state => state.userId);
-  const logOut = useUserStatus(state => state.logOut);
+  const userId = useUserStore(state => state.userId);
+  const logOut = useUserStore(state => state.logOut);
 
   const logOutMutation = useMutation({
     mutationFn: signOut,

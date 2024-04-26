@@ -7,7 +7,7 @@ type Store = {
   logOut: () => void;
 };
 
-export const useUserStatus = create<Store>()(
+export const useUserStore = create<Store>()(
   persist(
     set => ({
       userId: '',

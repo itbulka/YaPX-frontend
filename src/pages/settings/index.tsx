@@ -1,5 +1,5 @@
 import { Layout } from '@/components/layout';
-import { useUserStatus } from '@/slice/zustand';
+import { useUserStore } from '@/store/user';
 import { getUserById, updateUser } from '@/utils/api/users';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery } from '@tanstack/react-query';
@@ -15,7 +15,7 @@ const formSchema = z.object({
 type Form = z.infer<typeof formSchema>;
 
 export default function Settings() {
-  const userId = useUserStatus(state => state.userId);
+  const userId = useUserStore(state => state.userId);
   const { data: user, status } = useQuery({
     queryKey: ['user', null, userId],
     queryFn: async () => getUserById(userId),
