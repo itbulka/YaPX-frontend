@@ -1,11 +1,10 @@
 import Link from "next/link";
 import { Layout } from "../layout";
 import { useQuery } from "@tanstack/react-query";
-import { getPosts } from "@/utils/api/posts";
 import { Post } from "../Post/Post";
-import { useState } from "react";
 import { getPostsFromUser, getUserById } from "@/utils/api/users";
-import { useRouter } from "next/router";
+import { useUserStatus } from "@/slice/zustand";
+import { useEffect, useState } from "react";
 
 interface Props {
     currentId: string
@@ -22,9 +21,8 @@ interface Props {
 // Если в localstorage нет id значит вообще не авторизованы и дизейблим все кнопки, но просматривать профиль другого юзера можно
 
 export const ProfilePage = ({currentId}: Props) => {
-    const router = useRouter();
-    const idFromLocalStorage = ''
-    const isAuth = idFromLocalStorage || false;
+    const userId = useUserStatus(state => state.userId);
+    const [isFollowing, setFollowing] = useState(false);
 
     const {data: user, status} = useQuery({
         queryKey: ['user', null, currentId],
@@ -36,7 +34,9 @@ export const ProfilePage = ({currentId}: Props) => {
         queryFn: async () => getPostsFromUser(currentId)
     })
 
-    const isFollowing = user?.followers?.find( follower => follower.id === idFromLocalStorage);
+    useEffect(() => {
+        setFollowing(user?.followers?.find( follower => follower.id === userId) ? true : false);
+    }, [userId, user])
 
     return (
         <Layout>
@@ -54,9 +54,9 @@ export const ProfilePage = ({currentId}: Props) => {
                         <p className="text-sm fonst-regular">{`${posts?.length ?? 0} posts`}</p>
                     </div>
                     { 
-                        !(idFromLocalStorage === currentId) 
-                            ? isAuth ? <button className="transition ease-in-out duration-300 py-[2px] px-[6px] border border-black rounded-tl-lg rounded-br-lg hover:transition-colors hover:bg-black hover:text-white">{isFollowing ? 'Unfollowing' : 'Following'}</button> : null
-                            : <Link href={'/'} className="transition ease-in-out duration-300 py-[2px] px-[6px] border border-black rounded-tl-lg rounded-br-lg hover:transition-colors hover:bg-black hover:text-white">Settings</Link>
+                        !(userId === currentId) 
+                            ? <button className="transition ease-in-out duration-300 py-[2px] px-[6px] border border-black rounded-tl-lg rounded-br-lg hover:transition-colors hover:bg-black hover:text-white" disabled={ userId ? false : true}>{isFollowing ? 'Отписаться' : 'Подписаться'}</button>
+                            : <Link href={'/'} className="transition ease-in-out duration-300 py-[2px] px-[6px] border border-black rounded-tl-lg rounded-br-lg hover:transition-colors hover:bg-black hover:text-white">Настройки</Link>
                     }
                 </div>
                 <div className="w-full h-[1px] bg-stone-400 my-[16px]"></div>
