@@ -1,17 +1,98 @@
-import Link from "next/link";
+import Link from 'next/link';
+import { zodResolver } from '@hookform/resolvers/zod';
 
-export default function RegistationForm() {
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { signIn, signUp } from '@/utils/api/auth';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import { useUserStatus } from '../slice/zustand';
+
+const formSchema = z.object({
+  name: z.string().min(1, 'Введите имя'),
+  nickname: z.string().min(1, 'Введите никнейм'),
+  password: z.string().min(1, 'Введите пароль'),
+});
+
+type Form = z.infer<typeof formSchema>;
+
+export default function RegistationForm()  {
+  const stateUser = useUserStatus(state => state.state);
+  const logUser = useUserStatus(state => state.logIn);
+  const [state, setState] = useState(false);
+  const router = useRouter();
+  useEffect(() => {
+    if (stateUser) {
+      router.push('/');
+    }
+  }, [stateUser]);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Form>({
+    resolver: zodResolver(formSchema),
+  });
+
   return (
-    <form className="max-w-sm border border-black min-h-24 ml-auto mr-auto px-10 py-8 gap-3 rounded-3xl flex flex-col mt-20">
-      <span className="ml-4">Registration:</span>
-      <input className="border border-black rounded-2xl px-4 py-2" type="email" name="email" placeholder="Email:" />
-      <input className="border border-black rounded-2xl px-4 py-2" type="password" name="password" placeholder="Password:" />
-      <input className="border border-black rounded-2xl px-4 py-2" type="password" name="password" placeholder="Confirm password:" />
-      <div className="flex gap-2 justify-between pt-1">
-        <Link href={"/"}>
-          <button className="border border-black w-24 rounded-2xl py-1" type="button">back</button>
+    <form
+      onSubmit={handleSubmit(async data => {
+        try {
+          const userData = signUp(data).then(res => res.id);
+            if(state) {
+              setState(false);
+            }
+
+          logUser(await userData);
+        } catch {
+          setState(true);
+        }
+      })}
+      className="ml-auto mr-auto mt-20 flex min-h-24 max-w-sm flex-col gap-3 rounded-3xl px-10 py-8 shadow-md shadow-slate-300"
+    >
+      <div className='flex justify-between items-center'>
+        <span className="ml-4 text-slate-500 inline-block">Login:</span>
+      </div>
+
+      <input
+        {...register('name')}
+        className="rounded-2xl px-4 py-2 shadow-md shadow-slate-300"
+        placeholder="Name:"
+      />
+      {errors.name?.message && <p className="ml-4 text-red-500 text-[10px]">{errors.name?.message}</p>}
+
+      <input
+        {...register('nickname')}
+        className="rounded-2xl px-4 py-2 shadow-md shadow-slate-300"
+        placeholder="Nickname:"
+      />
+      {errors.nickname?.message && <p className="ml-4 text-red-500 text-[10px]">{errors.nickname?.message}</p>}
+
+      <input
+        {...register('password')}
+        className="rounded-2xl px-4 py-2 shadow-md shadow-slate-300"
+        type="password"
+        name="password"
+        placeholder="Password:"
+      />
+      {errors.password?.message && <p className="ml-4 text-red-500 text-[10px]">{errors.password?.message}</p>}
+
+      <div className="flex justify-between gap-2 pt-1">
+        <Link href={'/'}>
+          <button
+            className="w-24 rounded-2xl py-1 text-slate-500 shadow-md shadow-slate-300 hover:bg-slate-100"
+            type="button"
+          >
+            back
+          </button>
         </Link>
-        <button className="border border-black w-24 rounded-2xl py-1" type="submit">sign up</button>
+        <button
+          className="w-24 rounded-2xl py-1 text-slate-500 shadow-md shadow-slate-300 hover:bg-slate-100"
+          type="submit"
+        >
+          sign in
+        </button>
       </div>
     </form>
   );
