@@ -1,26 +1,34 @@
-import { useUserStatus } from '@/slice/zustand';
-import { IPost } from '@/types/types';
-import { cn } from '@/utils/cn';
 import Link from 'next/link';
 
+import { Post as PostType } from '@/models';
+import { useUserStore } from '@/store/user';
+import { cn } from '@/utils/cn';
+
 export type Props = {
-  post: IPost;
+  post: PostType;
 };
 
-export const Post = ({ post }: Props) => {  
-  const userId = useUserStatus(state => state.userId);
+export const Post = ({ post }: Props) => {
+  const userId = useUserStore(state => state.userId);
   const userName = post.user?.nickname ?? 'anonymous';
-  const created = post.createdAt ? new Date(post.createdAt).toLocaleDateString('ru-RU', {hour: 'numeric', minute: 'numeric'}) : '';
+  const created = post.createdAt
+    ? new Date(post.createdAt).toLocaleDateString('ru-RU', { hour: 'numeric', minute: 'numeric' })
+    : '';
   const text = post.text;
 
   return (
     <Link href={`/post/${post.id}`}>
-      <article className="rounded-md p-4 shadow gap-2 flex flex-col w-96 hover:bg-slate-100">
-        <div className='flex justify-between items-center'>
-          <Link href={`/profile/${post.user?.id ?? ''}`} className="text-sm text-stone-400 hover:underline">{userName}</Link>
+      <article className="flex w-96 flex-col gap-2 rounded-md p-4 shadow hover:bg-slate-100">
+        <div className="flex items-center justify-between">
+          <Link
+            href={`/profile/${post.user?.id ?? ''}`}
+            className="text-sm text-stone-400 hover:underline"
+          >
+            {userName}
+          </Link>
           <p className="t text-xs text-stone-400">{created}</p>
         </div>
-          <p className="">{text}</p>
+        <p className="">{text}</p>
         <div className="flex items-center justify-end gap-1">
           <p className="text-sm">{post.likes?.length ?? 0}</p>
           <button onClick={() => console.log('click like')} disabled={userId ? false : true}>
@@ -32,8 +40,8 @@ export const Post = ({ post }: Props) => {
               stroke="currentColor"
               className={cn('h-6 w-6', {
                 'hover:fill-red-300 hover:stroke-red-300': userId ? true : false,
-                'stroke-gray-500': userId ? false : true
-              })} 
+                'stroke-gray-500': userId ? false : true,
+              })}
             >
               <path
                 strokeLinecap="round"

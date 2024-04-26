@@ -1,12 +1,11 @@
-import { Layout } from '@/components/layout';
-import { useUserStatus } from '@/slice/zustand';
-import { IUser } from '@/types/types';
-import { getUserById, updateUser } from '@/utils/api/users';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+
+import { getUserById, updateUser } from '@/api/users';
+import { Layout } from '@/layouts';
+import { useUserStore } from '@/store/user';
 
 const formSchema = z.object({
   name: z.string().min(1, 'Введите имя'),
@@ -17,21 +16,21 @@ const formSchema = z.object({
 type Form = z.infer<typeof formSchema>;
 
 export default function Settings() {
-    const userId = useUserStatus(state => state.userId);
-    const {data: user, status } = useQuery({
-        queryKey: ['user', null, userId],
-        queryFn: async () => getUserById(userId)
-    })
+  const userId = useUserStore(state => state.userId);
+  const { data: user, status } = useQuery({
+    queryKey: ['user', null, userId],
+    queryFn: async () => getUserById(userId),
+  });
 
-    const updateUserMutation = useMutation({
-        mutationFn: (form: Form) => updateUser(form),
-        onSuccess: (data) => {
-            console.log(data)
-        },
-        onError: (err) => {
-            console.log(err.message)
-        }
-    })
+  const updateUserMutation = useMutation({
+    mutationFn: (form: Form) => updateUser(form),
+    onSuccess: data => {
+      console.log(data);
+    },
+    onError: err => {
+      console.log(err.message);
+    },
+  });
 
   const {
     register,
@@ -41,13 +40,9 @@ export default function Settings() {
     resolver: zodResolver(formSchema),
   });
 
-  const handleLogout = () => {
+  const handleLogout = () => {};
 
-  }
-
-  const handleDeleteAccount = () => {
-
-  }
+  const handleDeleteAccount = () => {};
 
   return (
     <Layout>
@@ -56,7 +51,6 @@ export default function Settings() {
           onSubmit={handleSubmit(data => updateUserMutation.mutate(data))}
           className="flex w-full min-w-80 max-w-96 flex-col gap-4"
         >
-
           <div>
             <label htmlFor="password" className="block pl-1 text-sm">
               Имя Фамилия

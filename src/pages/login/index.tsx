@@ -1,13 +1,14 @@
+import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { zodResolver } from '@hookform/resolvers/zod';
-
+import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { signIn } from '@/utils/api/auth';
-import { useState } from 'react';
-import { useRouter } from 'next/router';
-import { useUserStatus } from '../../slice/zustand';
-import { useMutation } from '@tanstack/react-query';
+
+import { signIn } from '@/api/auth';
+
+import { useUserStore } from '../../store/user';
 
 const formSchema = z.object({
   nickname: z.string().min(1, 'Введите никнейм'),
@@ -18,23 +19,23 @@ type Form = z.infer<typeof formSchema>;
 
 export default function SignInPage() {
   const router = useRouter();
-  const setUserId = useUserStatus(state => state.setUserId);
+  const setUserId = useUserStore(state => state.setUserId);
 
   const [success, setSuccess] = useState(false);
 
   const loginMutation = useMutation({
     mutationFn: (form: Form) => signIn(form),
-    onSuccess: (data) => {
+    onSuccess: data => {
       if (data.id) {
-        setUserId(data.userId)
-        router.replace('/')
+        setUserId(data.userId);
+        router.replace('/');
       }
     },
-    onError: (err) => {
-      console.log(err.message)
-      setSuccess(false)
-    }
-  })
+    onError: err => {
+      console.log(err.message);
+      setSuccess(false);
+    },
+  });
 
   const {
     register,
@@ -45,44 +46,70 @@ export default function SignInPage() {
   });
 
   return (
-    <div className='flex justify-center mt-20'>
+    <div className="mt-20 flex justify-center">
       <form
-        onSubmit={handleSubmit( data => loginMutation.mutate(data))}
-        className="flex flex-col gap-4 min-w-80 w-full max-w-96"
+        onSubmit={handleSubmit(data => loginMutation.mutate(data))}
+        className="flex w-full min-w-80 max-w-96 flex-col gap-4"
       >
-        <div className='flex items-center'>
+        <div className="flex items-center">
           <Link href={'/'}>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="h-6 w-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"
+              />
             </svg>
           </Link>
-          <span className="text-2xl font-semibold text-center w-full block">Авторизация</span>
-          {success ? <span className="text-red-500 text-[10px] mr-4">Ошибка в пароле или имени пользователя</span> : null}
+          <span className="block w-full text-center text-2xl font-semibold">Авторизация</span>
+          {success ? (
+            <span className="mr-4 text-[10px] text-red-500">
+              Ошибка в пароле или имени пользователя
+            </span>
+          ) : null}
         </div>
 
         <div>
-          <label htmlFor='nickname' className='block text-sm pl-1'>Имя пользователя</label>
+          <label htmlFor="nickname" className="block pl-1 text-sm">
+            Имя пользователя
+          </label>
           <input
             {...register('nickname')}
-            className="py-1 px-2 border rounded-md w-full focus:outline-none focus:border-black"
-            type='text'
+            className="w-full rounded-md border px-2 py-1 focus:border-black focus:outline-none"
+            type="text"
             placeholder="ivan_ivanov"
           />
-          {errors.nickname?.message && <p className="ml-4 text-red-500 text-[10px]">{errors.nickname?.message}</p>}
+          {errors.nickname?.message && (
+            <p className="ml-4 text-[10px] text-red-500">{errors.nickname?.message}</p>
+          )}
         </div>
 
         <div>
-          <label htmlFor="password" className='block text-sm pl-1'>Пароль</label>
+          <label htmlFor="password" className="block pl-1 text-sm">
+            Пароль
+          </label>
           <input
             {...register('password')}
-            className="py-1 px-2 border rounded-md w-full focus:outline-none focus:border-black"
+            className="w-full rounded-md border px-2 py-1 focus:border-black focus:outline-none"
             type="password"
             placeholder="*****"
           />
-          {errors.password?.message && <p className="ml-4 text-red-500 text-[10px]">{errors.password?.message}</p>}
+          {errors.password?.message && (
+            <p className="ml-4 text-[10px] text-red-500">{errors.password?.message}</p>
+          )}
         </div>
 
-        <button className="self-end min-w-24 max-w-32 bg-sky-600 rounded-md text-white py-1 px-2 " type="submit">
+        <button
+          className="min-w-24 max-w-32 self-end rounded-md bg-sky-600 px-2 py-1 text-white "
+          type="submit"
+        >
           Вход
         </button>
       </form>
