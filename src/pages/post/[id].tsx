@@ -19,13 +19,7 @@ export default function PostId() {
         {status === 'pending' ? 'Loading' : null}
 
         {status === 'success' ? (
-          <div className='max-w-5xl rounded-md p-4 shadow gap-2 flex flex-col'>
-            
-              <div className='hover:bg-slate-100'>
-                <Post post={posts} />
-              </div>
-            
-          </div>
+          <Post post={posts} />
         ) : null}
       </div>
     </Layout>

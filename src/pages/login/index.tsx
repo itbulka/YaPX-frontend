@@ -26,7 +26,7 @@ export default function SignInPage() {
     mutationFn: (form: Form) => signIn(form),
     onSuccess: (data) => {
       if (data.id) {
-        setUserId(data.id)
+        setUserId(data.userId)
         router.replace('/')
       }
     },
@@ -45,47 +45,47 @@ export default function SignInPage() {
   });
 
   return (
-    <form
-      onSubmit={handleSubmit( data => loginMutation.mutate(data))}
-      className="ml-auto mr-auto mt-20 flex min-h-24 max-w-sm flex-col gap-3 rounded-3xl px-10 py-8 shadow-md shadow-slate-300"
-    >
-      <div className='flex justify-between items-center'>
-        <span className="ml-4 text-slate-500 inline-block">Авторизация:</span>
-        {success ? <span className="text-red-500 text-[10px] mr-4">Ошибка в пароле или имени пользователя</span> : null}
-      </div>
+    <div className='flex justify-center mt-20'>
+      <form
+        onSubmit={handleSubmit( data => loginMutation.mutate(data))}
+        className="flex flex-col gap-4 min-w-80 w-full max-w-96"
+      >
+        <div className='flex items-center'>
+          <Link href={'/'}>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+            </svg>
+          </Link>
+          <span className="text-2xl font-semibold text-center w-full block">Авторизация</span>
+          {success ? <span className="text-red-500 text-[10px] mr-4">Ошибка в пароле или имени пользователя</span> : null}
+        </div>
 
-      <input
-        {...register('nickname')}
-        className="rounded-2xl px-4 py-2 shadow-md shadow-slate-300"
-        type='text'
-        placeholder="Nickname:"
-      />
-      {errors.nickname?.message && <p className="ml-4 text-red-500 text-[10px]">{errors.nickname?.message}</p>}
+        <div>
+          <label htmlFor='nickname' className='block text-sm pl-1'>Имя пользователя</label>
+          <input
+            {...register('nickname')}
+            className="py-1 px-2 border rounded-md w-full focus:outline-none focus:border-black"
+            type='text'
+            placeholder="ivan_ivanov"
+          />
+          {errors.nickname?.message && <p className="ml-4 text-red-500 text-[10px]">{errors.nickname?.message}</p>}
+        </div>
 
-      <input
-        {...register('password')}
-        className="rounded-2xl px-4 py-2 shadow-md shadow-slate-300"
-        type="password"
-        placeholder="Password:"
-      />
-      {errors.password?.message && <p className="ml-4 text-red-500 text-[10px]">{errors.password?.message}</p>}
+        <div>
+          <label htmlFor="password" className='block text-sm pl-1'>Пароль</label>
+          <input
+            {...register('password')}
+            className="py-1 px-2 border rounded-md w-full focus:outline-none focus:border-black"
+            type="password"
+            placeholder="*****"
+          />
+          {errors.password?.message && <p className="ml-4 text-red-500 text-[10px]">{errors.password?.message}</p>}
+        </div>
 
-      <div className="flex justify-between gap-2 pt-1">
-        <Link href={'/'}>
-          <button
-            className="w-24 rounded-2xl py-1 text-slate-500 shadow-md shadow-slate-300 hover:bg-slate-100"
-            type="button"
-          >
-            back
-          </button>
-        </Link>
-        <button
-          className="w-24 rounded-2xl py-1 text-slate-500 shadow-md shadow-slate-300 hover:bg-slate-100"
-          type="submit"
-        >
-          sign in
+        <button className="self-end min-w-24 max-w-32 bg-sky-600 rounded-md text-white py-1 px-2 " type="submit">
+          Вход
         </button>
-      </div>
-    </form>
+      </form>
+    </div>
   );
 }
