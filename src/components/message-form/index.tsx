@@ -16,7 +16,7 @@ const formSchema = z.object({
 
 type Form = z.infer<typeof formSchema>;
 
-export default function SignInPage() {
+export default function MessageForm() {
   const router = useRouter();
   const setUserId = useUserStatus(state => state.setUserId);
 
@@ -45,47 +45,9 @@ export default function SignInPage() {
   });
 
   return (
-    <form
-      onSubmit={handleSubmit( data => loginMutation.mutate(data))}
-      className="ml-auto mr-auto mt-20 flex min-h-24 max-w-sm flex-col gap-3 rounded-3xl px-10 py-8 shadow-md shadow-slate-300"
-    >
-      <div className='flex justify-between items-center'>
-        <span className="ml-4 text-slate-500 inline-block">Введите сообщение:</span>
-        {success ? <span className="text-red-500 text-[10px] mr-4">Ошибка в пароле или имени пользователя</span> : null}
-      </div>
-
-      <input
-        {...register('nickname')}
-        className="rounded-2xl px-4 py-2 shadow-md shadow-slate-300"
-        type='text'
-        placeholder="Nickname:"
-      />
-      {errors.nickname?.message && <p className="ml-4 text-red-500 text-[10px]">{errors.nickname?.message}</p>}
-
-      <input
-        {...register('password')}
-        className="rounded-2xl px-4 py-2 shadow-md shadow-slate-300"
-        type="password"
-        placeholder="Password:"
-      />
-      {errors.password?.message && <p className="ml-4 text-red-500 text-[10px]">{errors.password?.message}</p>}
-
-      <div className="flex justify-between gap-2 pt-1">
-        <Link href={'/'}>
-          <button
-            className="w-24 rounded-2xl py-1 text-slate-500 shadow-md shadow-slate-300 hover:bg-slate-100"
-            type="button"
-          >
-            back
-          </button>
-        </Link>
-        <button
-          className="w-24 rounded-2xl py-1 text-slate-500 shadow-md shadow-slate-300 hover:bg-slate-100"
-          type="submit"
-        >
-          sign in
-        </button>
-      </div>
-    </form>
+   <form action="" className='flex gap-4 min-w-80 w-full max-w-96 justify-between'>
+    <input type="text" className='py-1 px-2 border rounded-md w-full focus:outline-none focus:border-black'/>
+    <button className='self-end min-w-24 max-w-32 bg-sky-600 rounded-md text-white py-1 px-2'>Отправить</button>
+   </form>
   );
 }
