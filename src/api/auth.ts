@@ -38,9 +38,10 @@ export async function signIn(form: SignInData) {
     throw new Error(res.statusText);
   }
 
-  const data = await res.json();
+  const data = (await res.json()) as UserAuth;
+  document.cookie = `auth_session=${data.id}; path=/`;
 
-  return data as UserAuth;
+  return data;
 }
 
 export async function signUp(form: SignUpData) {
