@@ -7,13 +7,13 @@ import { getPostsFromUser, getUserById } from '@/api/users';
 import MessageForm from '@/components/message-form';
 import { Post } from '@/components/post';
 import { Layout } from '@/layouts';
-import { useUserStore } from '@/store/user';
+import { useAuthStore } from '@/store/auth';
 
 export default function Profile() {
   const router = useRouter();
   const id = router.query.id as string;
 
-  const userId = useUserStore(state => state.userId);
+  const userId = useAuthStore(state => state.userId);
   const [isFollowing, setFollowing] = useState(false);
 
   const { data: user, status } = useQuery({

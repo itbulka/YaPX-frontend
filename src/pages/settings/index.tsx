@@ -5,7 +5,7 @@ import { z } from 'zod';
 
 import { getUserById, updateUser } from '@/api/users';
 import { Layout } from '@/layouts';
-import { useUserStore } from '@/store/user';
+import { useAuthStore } from '@/store/auth';
 
 const formSchema = z.object({
   name: z.string().min(1, 'Введите имя'),
@@ -16,10 +16,11 @@ const formSchema = z.object({
 type Form = z.infer<typeof formSchema>;
 
 export default function Settings() {
-  const userId = useUserStore(state => state.userId);
-  const { data: user, status } = useQuery({
+  const userId = useAuthStore(state => state.userId);
+
+  const { data: user } = useQuery({
     queryKey: ['user', null, userId],
-    queryFn: async () => getUserById(userId),
+    queryFn: async () => getUserById(userId!),
   });
 
   const updateUserMutation = useMutation({

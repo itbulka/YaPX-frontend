@@ -8,7 +8,7 @@ import { z } from 'zod';
 
 import { signUp } from '@/api/auth';
 
-import { useUserStore } from '../../store/user';
+import { useAuthStore } from '../../store/auth';
 
 const formSchema = z.object({
   name: z.string().min(1, 'Введите имя'),
@@ -20,7 +20,7 @@ type Form = z.infer<typeof formSchema>;
 
 export default function RegistationForm() {
   const router = useRouter();
-  const setUserId = useUserStore(state => state.setUserId);
+  const setUserId = useAuthStore(state => state.setUserId);
   const [success, setSuccess] = useState(false);
 
   const loginMutation = useMutation({

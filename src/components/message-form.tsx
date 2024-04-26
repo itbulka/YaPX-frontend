@@ -7,7 +7,7 @@ import { z } from 'zod';
 
 import { createPost } from '@/api/posts';
 
-import { useUserStore } from '../store/user';
+import { useAuthStore } from '../store/auth';
 
 const formSchema = z.object({
   text: z.string().min(1, 'Введите сообщение'),
@@ -17,7 +17,7 @@ type Form = z.infer<typeof formSchema>;
 
 export default function MessageForm() {
   const router = useRouter();
-  const setUserId = useUserStore(state => state.setUserId);
+  const setUserId = useAuthStore(state => state.setUserId);
 
   const [success, setSuccess] = useState(false);
 

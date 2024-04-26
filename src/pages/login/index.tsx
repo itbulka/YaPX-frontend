@@ -8,7 +8,7 @@ import { z } from 'zod';
 
 import { signIn } from '@/api/auth';
 
-import { useUserStore } from '../../store/user';
+import { useAuthStore } from '../../store/auth';
 
 const formSchema = z.object({
   nickname: z.string().min(1, 'Введите никнейм'),
@@ -19,7 +19,8 @@ type Form = z.infer<typeof formSchema>;
 
 export default function SignInPage() {
   const router = useRouter();
-  const setUserId = useUserStore(state => state.setUserId);
+  const setSessionId = useAuthStore(state => state.setSessionId);
+  const setUserId = useAuthStore(state => state.setUserId);
 
   const [success, setSuccess] = useState(false);
 
@@ -27,6 +28,7 @@ export default function SignInPage() {
     mutationFn: (form: Form) => signIn(form),
     onSuccess: data => {
       if (data.id) {
+        setSessionId(data.id);
         setUserId(data.userId);
         router.replace('/');
       }

@@ -2,16 +2,16 @@ import Link from 'next/link';
 import { useMutation } from '@tanstack/react-query';
 
 import { signOut } from '@/api/auth';
-import { useUserStore } from '@/store/user';
+import { useAuthStore } from '@/store/auth';
 
 export const Layout = ({ children }: { children: React.ReactNode }) => {
-  const userId = useUserStore(state => state.userId);
-  const logOut = useUserStore(state => state.logOut);
+  const userId = useAuthStore(state => state.userId);
+  const setUserId = useAuthStore(state => state.setUserId);
 
   const logOutMutation = useMutation({
     mutationFn: signOut,
     onSuccess: data => {
-      if (data.success) logOut();
+      if (data.success) setUserId(null);
     },
     onError: err => {
       console.log(err.message);
