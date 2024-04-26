@@ -10,7 +10,7 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
   const logOutMutation = useMutation({
     mutationFn: signOut,
     onSuccess: data => {
-      if (data.succes) logOut();
+      if (data.success) logOut();
     },
     onError: err => {
       console.log(err.message);

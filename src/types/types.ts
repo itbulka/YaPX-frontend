@@ -21,5 +21,5 @@ export interface IFolower {
 }
 
 export interface ISuccess {
-  succes: boolean;
+  success: boolean;
 }
