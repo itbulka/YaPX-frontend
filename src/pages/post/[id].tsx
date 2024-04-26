@@ -1,9 +1,9 @@
 import { useRouter } from 'next/router';
 import { useQuery } from '@tanstack/react-query';
 
+import { getPostById } from '@/api/posts';
 import { Post } from '@/components/post';
 import { Layout } from '@/layouts';
-import { getPostById } from '@/utils/api/posts';
 
 export default function PostId() {
   const router = useRouter();

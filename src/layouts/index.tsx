@@ -1,8 +1,8 @@
 import Link from 'next/link';
 import { useMutation } from '@tanstack/react-query';
 
+import { signOut } from '@/api/auth';
 import { useUserStore } from '@/store/user';
-import { signOut } from '@/utils/api/auth';
 
 export const Layout = ({ children }: { children: React.ReactNode }) => {
   const userId = useUserStore(state => state.userId);

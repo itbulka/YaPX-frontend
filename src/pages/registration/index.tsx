@@ -6,7 +6,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { signUp } from '@/utils/api/auth';
+import { signUp } from '@/api/auth';
 
 import { useUserStore } from '../../store/user';
 

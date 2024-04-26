@@ -3,9 +3,9 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import { getUserById, updateUser } from '@/api/users';
 import { Layout } from '@/layouts';
 import { useUserStore } from '@/store/user';
-import { getUserById, updateUser } from '@/utils/api/users';
 
 const formSchema = z.object({
   name: z.string().min(1, 'Введите имя'),

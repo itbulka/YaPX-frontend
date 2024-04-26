@@ -3,11 +3,11 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useQuery } from '@tanstack/react-query';
 
+import { getPostsFromUser, getUserById } from '@/api/users';
 import MessageForm from '@/components/message-form';
 import { Post } from '@/components/post';
 import { Layout } from '@/layouts';
 import { useUserStore } from '@/store/user';
-import { getPostsFromUser, getUserById } from '@/utils/api/users';
 
 export default function Profile() {
   const router = useRouter();

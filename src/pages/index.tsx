@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 
+import { getPosts } from '@/api/posts';
 import { Post } from '@/components/post';
 import { Layout } from '@/layouts';
-import { getPosts } from '@/utils/api/posts';
 
 export default function Home() {
   const [page, setPage] = useState(1);
