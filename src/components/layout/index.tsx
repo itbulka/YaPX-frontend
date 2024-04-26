@@ -33,7 +33,7 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
               >
                 Sign up
               </Link><Link
-                href={'/login'}
+                href={'/registration'}
                 className="rounded-md p-1 text-sm text-slate-800 transition duration-300 ease-in hover:underline hover:transition-colors"
               >
                   Log in
