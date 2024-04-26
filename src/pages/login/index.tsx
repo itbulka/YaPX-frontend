@@ -26,7 +26,7 @@ export default function SignInPage() {
     mutationFn: (form: Form) => signIn(form),
     onSuccess: (data) => {
       if (data.id) {
-        setUserId(data.id)
+        setUserId(data.userId)
         router.replace('/')
       }
     },
