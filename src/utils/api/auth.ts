@@ -29,6 +29,7 @@ export async function signIn(form: ISignInData) {
       headers: {
         accept: 'application/json',
       },
+      credentials: 'include',
       body: JSON.stringify(form),
     });
 
@@ -48,6 +49,7 @@ export async function signUp(form: ISignUpData) {
       headers: {
         accept: 'application/json',
       },
+      credentials: 'include',
       body: JSON.stringify(form),
     });
 
@@ -65,7 +67,8 @@ export async function signOut() {
       method: 'GET',
       headers: {
         accept: 'application/json',
-      }
+      },
+      credentials: 'include',
     });
 
     if (!res.ok) {
@@ -82,7 +85,8 @@ export async function me() {
       method: 'GET',
       headers: {
         accept: 'application/json',
-      }
+      },
+      credentials: 'include',
     });
 
     if (!res.ok) {

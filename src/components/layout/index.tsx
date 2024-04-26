@@ -48,24 +48,24 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
 
       <div className="flex gap-10 px-52 pt-10">
         <nav className="flex flex-col gap-2 min-w-32">
-          <Link
+          { userId ? ( <Link
             href={'/profile/12'}
             className="rounded-md p-1 px-3 text-sm text-slate-800 transition duration-300 ease-in hover:bg-gray-400 hover:text-white hover:transition-colors"
           >
             Профиль
-          </Link>
+          </Link>) : null}
           <Link
             href={'/my'}
             className="rounded-md p-1 px-3 text-sm text-slate-800 transition duration-300 ease-in hover:bg-gray-400 hover:text-white hover:transition-colors"
           >
             Мои посты
           </Link>
-          <Link
+          { userId ? (<Link
             href={'/settings'}
             className="rounded-md p-1 px-3 text-sm text-slate-800 transition duration-300 ease-in hover:bg-gray-400 hover:text-white hover:transition-colors"
           >
             Настройки
-          </Link>
+          </Link>) : null}
         </nav>
         <div className="flex flex-1 flex-col items-center justify-center gap-10">{children}</div>
       </div>
