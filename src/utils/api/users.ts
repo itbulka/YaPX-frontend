@@ -1,22 +1,22 @@
-import { IFolower, IPost, ISuccess, IUser } from '@/types/types';
+import { Follower, Post, Success, User } from '@/models/types';
 import { url } from '../constants';
 
-export interface IUserReg {
+export type UserReg = {
   id: string;
-}
+};
 
-export interface IUserAuth {
+export type UserAuth = {
   id: string;
   expiresAt: string;
   fresh: boolean;
   userId: string;
-}
+};
 
-export interface IEditUserData {
+export type EditUserData = {
   name: string;
   nickname: string;
   password: string;
-}
+};
 
 export async function getUsers() {
   const res = await fetch(`${url}/users`, {
@@ -32,10 +32,10 @@ export async function getUsers() {
 
   const data = await res.json();
 
-  return data as IUser[];
+  return data as User[];
 }
 
-export async function updateUser(form: IEditUserData) {
+export async function updateUser(form: EditUserData) {
   const res = await fetch(`${url}/users`, {
     method: 'PUT',
     headers: {
@@ -50,7 +50,7 @@ export async function updateUser(form: IEditUserData) {
 
   const data = await res.json();
 
-  return data as IUser;
+  return data as User;
 }
 
 export async function deleteUser() {
@@ -67,7 +67,7 @@ export async function deleteUser() {
 
   const data = await res.json();
 
-  return data as ISuccess;
+  return data as Success;
 }
 
 export async function getUserById(userId: string) {
@@ -84,7 +84,7 @@ export async function getUserById(userId: string) {
 
   const data = await res.json();
 
-  return data as IUser;
+  return data as User;
 }
 
 export async function getPostsFromUser(userId: string) {
@@ -104,7 +104,7 @@ export async function getPostsFromUser(userId: string) {
 
   const data = await res.json();
 
-  return data as IPost[];
+  return data as Post[];
 }
 
 export async function following(userId: string) {
@@ -121,7 +121,7 @@ export async function following(userId: string) {
 
   const data = await res.json();
 
-  return data as IFolower;
+  return data as Follower;
 }
 
 export async function unfollowing(userId: string) {
@@ -138,5 +138,5 @@ export async function unfollowing(userId: string) {
 
   const data = await res.json();
 
-  return data as ISuccess;
+  return data as Success;
 }

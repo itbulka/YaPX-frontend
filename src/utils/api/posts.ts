@@ -1,9 +1,9 @@
-import { IPost, ISuccess } from '@/types/types';
+import { Post, Success } from '@/models/types';
 import { url } from '../constants';
 
-export interface ICreatePostData {
+export type CreatePostData = {
   text: string;
-}
+};
 
 export async function getPosts(page: number, perPage: number) {
   const res = await fetch(`${url}/posts?page=${page}&per-page=${perPage}&with=user&with=likes`, {
@@ -19,10 +19,10 @@ export async function getPosts(page: number, perPage: number) {
 
   const data = await res.json();
 
-  return data as IPost[];
+  return data as Post[];
 }
 
-export async function createPost(form: ICreatePostData) {
+export async function createPost(form: CreatePostData) {
   const res = await fetch(`${url}/posts`, {
     method: 'POST',
     headers: {
@@ -56,7 +56,7 @@ export async function getPostsFollowing() {
 
   const data = await res.json();
 
-  return data as IPost[];
+  return data as Post[];
 }
 
 export async function getPostById(postId: string) {
@@ -73,10 +73,10 @@ export async function getPostById(postId: string) {
 
   const data = await res.json();
 
-  return data as IPost;
+  return data as Post;
 }
 
-export async function updatePostById(postId: string, form: ICreatePostData) {
+export async function updatePostById(postId: string, form: CreatePostData) {
   const res = await fetch(`${url}/posts/${postId}`, {
     method: 'PUT',
     headers: {
@@ -91,7 +91,7 @@ export async function updatePostById(postId: string, form: ICreatePostData) {
 
   const data = await res.json();
 
-  return data as IPost;
+  return data as Post;
 }
 
 export async function deletePostById(postId: string) {
@@ -108,7 +108,7 @@ export async function deletePostById(postId: string) {
 
   const data = await res.json();
 
-  return data as ISuccess;
+  return data as Success;
 }
 
 export async function addLikePost(postId: string) {
@@ -125,7 +125,7 @@ export async function addLikePost(postId: string) {
 
   const data = await res.json();
 
-  return data as ISuccess;
+  return data as Success;
 }
 
 export async function removeLikePost(postId: string) {
@@ -142,5 +142,5 @@ export async function removeLikePost(postId: string) {
 
   const data = await res.json();
 
-  return data as ISuccess;
+  return data as Success;
 }

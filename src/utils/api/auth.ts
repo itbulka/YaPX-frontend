@@ -1,29 +1,29 @@
-import { ISuccess } from '@/types/types';
+import { Success } from '@/models';
 import { url } from '../constants';
 
-export interface IUserReg {
+export type UserReg = {
   id: string;
-}
+};
 
-export interface IUserAuth {
+export type UserAuth = {
   id: string;
   expiresAt: string;
   fresh: boolean;
   userId: string;
-}
+};
 
-interface ISignInData {
+type SignInData = {
   nickname: string;
   password: string;
-}
+};
 
-interface ISignUpData {
+type SignUpData = {
   name: string;
   nickname: string;
   password: string;
-}
+};
 
-export async function signIn(form: ISignInData) {
+export async function signIn(form: SignInData) {
   const res = await fetch(`${url}/sign-in`, {
     method: 'POST',
     headers: {
@@ -39,10 +39,10 @@ export async function signIn(form: ISignInData) {
 
   const data = await res.json();
 
-  return data as IUserAuth;
+  return data as UserAuth;
 }
 
-export async function signUp(form: ISignUpData) {
+export async function signUp(form: SignUpData) {
   const res = await fetch(`${url}/sign-up`, {
     method: 'POST',
     headers: {
@@ -58,7 +58,7 @@ export async function signUp(form: ISignUpData) {
 
   const data = await res.json();
 
-  return data as IUserReg;
+  return data as UserReg;
 }
 
 export async function signOut() {
@@ -76,7 +76,7 @@ export async function signOut() {
 
   const data = await res.json();
 
-  return data as ISuccess;
+  return data as Success;
 }
 
 export async function me() {

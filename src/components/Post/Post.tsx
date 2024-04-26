@@ -1,10 +1,10 @@
 import { useUserStatus } from '@/slice/zustand';
-import { IPost } from '@/types/types';
+import { Post as PostType } from '@/models/types';
 import { cn } from '@/utils/cn';
 import Link from 'next/link';
 
 export type Props = {
-  post: IPost;
+  post: PostType;
 };
 
 export const Post = ({ post }: Props) => {

@@ -1,10 +1,8 @@
 import { Layout } from '@/components/layout';
 import { useUserStatus } from '@/slice/zustand';
-import { IUser } from '@/types/types';
 import { getUserById, updateUser } from '@/utils/api/users';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
