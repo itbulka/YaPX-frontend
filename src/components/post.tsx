@@ -1,7 +1,8 @@
-import { useUserStore } from '@/store/user';
-import { Post as PostType } from '@/models/types';
-import { cn } from '@/utils/cn';
 import Link from 'next/link';
+
+import { Post as PostType } from '@/models';
+import { useUserStore } from '@/store/user';
+import { cn } from '@/utils/cn';
 
 export type Props = {
   post: PostType;

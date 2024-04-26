@@ -1,5 +1,6 @@
-import { Follower, Post, Success, User } from '@/models/types';
-import { url } from '../constants';
+import { Follower, Post, Success, User } from '@/models';
+
+import { URL } from '.';
 
 export type UserReg = {
   id: string;
@@ -19,7 +20,7 @@ export type EditUserData = {
 };
 
 export async function getUsers() {
-  const res = await fetch(`${url}/users`, {
+  const res = await fetch(`${URL}/users`, {
     method: 'GET',
     headers: {
       accept: 'application/json',
@@ -36,7 +37,7 @@ export async function getUsers() {
 }
 
 export async function updateUser(form: EditUserData) {
-  const res = await fetch(`${url}/users`, {
+  const res = await fetch(`${URL}/users`, {
     method: 'PUT',
     headers: {
       accept: 'application/json',
@@ -54,7 +55,7 @@ export async function updateUser(form: EditUserData) {
 }
 
 export async function deleteUser() {
-  const res = await fetch(`${url}/users`, {
+  const res = await fetch(`${URL}/users`, {
     method: 'DELETE',
     headers: {
       accept: 'application/json',
@@ -71,7 +72,7 @@ export async function deleteUser() {
 }
 
 export async function getUserById(userId: string) {
-  const res = await fetch(`${url}/users/${userId}`, {
+  const res = await fetch(`${URL}/users/${userId}`, {
     method: 'GET',
     headers: {
       accept: 'application/json',
@@ -89,7 +90,7 @@ export async function getUserById(userId: string) {
 
 export async function getPostsFromUser(userId: string) {
   const res = await fetch(
-    `${url}/users/${userId}/posts?page=1&per-page=15&sort=desc&with=user&with=likes`,
+    `${URL}/users/${userId}/posts?page=1&per-page=15&sort=desc&with=user&with=likes`,
     {
       method: 'GET',
       headers: {
@@ -108,7 +109,7 @@ export async function getPostsFromUser(userId: string) {
 }
 
 export async function following(userId: string) {
-  const res = await fetch(`${url}/users/${userId}/followings`, {
+  const res = await fetch(`${URL}/users/${userId}/followings`, {
     method: 'POST',
     headers: {
       accept: 'application/json',
@@ -125,7 +126,7 @@ export async function following(userId: string) {
 }
 
 export async function unfollowing(userId: string) {
-  const res = await fetch(`${url}/users/${userId}/followings`, {
+  const res = await fetch(`${URL}/users/${userId}/followings`, {
     method: 'DELETE',
     headers: {
       accept: 'application/json',

@@ -1,5 +1,6 @@
 import { Success } from '@/models';
-import { url } from '../constants';
+
+import { URL } from '.';
 
 export type UserReg = {
   id: string;
@@ -24,7 +25,7 @@ type SignUpData = {
 };
 
 export async function signIn(form: SignInData) {
-  const res = await fetch(`${url}/sign-in`, {
+  const res = await fetch(`${URL}/sign-in`, {
     method: 'POST',
     headers: {
       accept: 'application/json',
@@ -43,7 +44,7 @@ export async function signIn(form: SignInData) {
 }
 
 export async function signUp(form: SignUpData) {
-  const res = await fetch(`${url}/sign-up`, {
+  const res = await fetch(`${URL}/sign-up`, {
     method: 'POST',
     headers: {
       accept: 'application/json',
@@ -62,7 +63,7 @@ export async function signUp(form: SignUpData) {
 }
 
 export async function signOut() {
-  const res = await fetch(`${url}/sign-out`, {
+  const res = await fetch(`${URL}/sign-out`, {
     method: 'GET',
     headers: {
       accept: 'application/json',
@@ -80,7 +81,7 @@ export async function signOut() {
 }
 
 export async function me() {
-  const res = await fetch(`${url}/me`, {
+  const res = await fetch(`${URL}/me`, {
     method: 'GET',
     headers: {
       accept: 'application/json',

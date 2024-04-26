@@ -1,12 +1,13 @@
-import { Post } from '@/components/Post/Post';
-import { Layout } from '@/components/layout';
-import MessageForm from '@/components/message-form';
-import { useUserStore } from '@/store/user';
-import { getPostsFromUser, getUserById } from '@/utils/api/users';
-import { useQuery } from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+
+import MessageForm from '@/components/message-form';
+import { Post } from '@/components/post';
+import { Layout } from '@/layouts';
+import { useUserStore } from '@/store/user';
+import { getPostsFromUser, getUserById } from '@/utils/api/users';
 
 export default function Profile() {
   const router = useRouter();

@@ -1,13 +1,14 @@
+import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { zodResolver } from '@hookform/resolvers/zod';
-
+import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+
 import { signIn } from '@/utils/api/auth';
-import { useState } from 'react';
-import { useRouter } from 'next/router';
+
 import { useUserStore } from '../../store/user';
-import { useMutation } from '@tanstack/react-query';
 
 const formSchema = z.object({
   nickname: z.string().min(1, 'Введите никнейм'),

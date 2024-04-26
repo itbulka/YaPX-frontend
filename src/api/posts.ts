@@ -1,12 +1,13 @@
-import { Post, Success } from '@/models/types';
-import { url } from '../constants';
+import { Post, Success } from '@/models';
+
+import { URL } from '.';
 
 export type CreatePostData = {
   text: string;
 };
 
 export async function getPosts(page: number, perPage: number) {
-  const res = await fetch(`${url}/posts?page=${page}&per-page=${perPage}&with=user&with=likes`, {
+  const res = await fetch(`${URL}/posts?page=${page}&per-page=${perPage}&with=user&with=likes`, {
     method: 'GET',
     headers: {
       accept: 'application/json',
@@ -23,7 +24,7 @@ export async function getPosts(page: number, perPage: number) {
 }
 
 export async function createPost(form: CreatePostData) {
-  const res = await fetch(`${url}/posts`, {
+  const res = await fetch(`${URL}/posts`, {
     method: 'POST',
     headers: {
       accept: 'application/json',
@@ -43,7 +44,7 @@ export async function createPost(form: CreatePostData) {
 }
 
 export async function getPostsFollowing() {
-  const res = await fetch(`${url}/followings`, {
+  const res = await fetch(`${URL}/followings`, {
     method: 'GET',
     headers: {
       accept: 'application/json',
@@ -60,7 +61,7 @@ export async function getPostsFollowing() {
 }
 
 export async function getPostById(postId: string) {
-  const res = await fetch(`${url}/posts/${postId}?with=user&with=likes`, {
+  const res = await fetch(`${URL}/posts/${postId}?with=user&with=likes`, {
     method: 'GET',
     headers: {
       accept: 'application/json',
@@ -77,7 +78,7 @@ export async function getPostById(postId: string) {
 }
 
 export async function updatePostById(postId: string, form: CreatePostData) {
-  const res = await fetch(`${url}/posts/${postId}`, {
+  const res = await fetch(`${URL}/posts/${postId}`, {
     method: 'PUT',
     headers: {
       accept: 'application/json',
@@ -95,7 +96,7 @@ export async function updatePostById(postId: string, form: CreatePostData) {
 }
 
 export async function deletePostById(postId: string) {
-  const res = await fetch(`${url}/posts/${postId}`, {
+  const res = await fetch(`${URL}/posts/${postId}`, {
     method: 'DELETE',
     headers: {
       accept: 'application/json',
@@ -112,7 +113,7 @@ export async function deletePostById(postId: string) {
 }
 
 export async function addLikePost(postId: string) {
-  const res = await fetch(`${url}/posts/${postId}/likes`, {
+  const res = await fetch(`${URL}/posts/${postId}/likes`, {
     method: 'POST',
     headers: {
       accept: 'application/json',
@@ -129,7 +130,7 @@ export async function addLikePost(postId: string) {
 }
 
 export async function removeLikePost(postId: string) {
-  const res = await fetch(`${url}/posts/${postId}/likes`, {
+  const res = await fetch(`${URL}/posts/${postId}/likes`, {
     method: 'DELETE',
     headers: {
       accept: 'application/json',

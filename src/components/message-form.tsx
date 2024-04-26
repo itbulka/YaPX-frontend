@@ -1,13 +1,13 @@
-import Link from 'next/link';
-import { zodResolver } from '@hookform/resolvers/zod';
-
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
-import { useUserStore } from '../../store/user';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+
 import { createPost } from '@/utils/api/posts';
+
+import { useUserStore } from '../store/user';
 
 const formSchema = z.object({
   text: z.string().min(1, 'Введите сообщение'),
