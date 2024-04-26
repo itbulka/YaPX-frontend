@@ -47,9 +47,9 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
       </div>
 
       <div className="flex gap-10 px-52 pt-10">
-        <nav className="flex flex-col gap-2 min-w-32">
+        {userId ? (<nav className="flex flex-col gap-2 min-w-32">
           <Link
-            href={'/profile/12'}
+            href={`/profile/${userId}`}
             className="rounded-md p-1 px-3 text-sm text-slate-800 transition duration-300 ease-in hover:bg-gray-400 hover:text-white hover:transition-colors"
           >
             Профиль
@@ -66,7 +66,8 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
           >
             Настройки
           </Link>
-        </nav>
+        </nav>) : null}
+        
         <div className="flex flex-1 flex-col items-center justify-center gap-10">{children}</div>
       </div>
     </div>

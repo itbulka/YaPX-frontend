@@ -49,6 +49,7 @@ export async function signUp(form: ISignUpData) {
       headers: {
         accept: 'application/json',
       },
+      credentials: 'include',
       body: JSON.stringify(form),
     });
 

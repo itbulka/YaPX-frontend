@@ -1,5 +1,6 @@
 import { Post } from "@/components/Post/Post";
 import { Layout } from "@/components/layout";
+import MessageForm from "@/components/message-form";
 import { useUserStatus } from "@/slice/zustand";
 import { getPostsFromUser, getUserById } from "@/utils/api/users";
 import { useQuery } from "@tanstack/react-query";
@@ -46,11 +47,12 @@ export default function Profile() {
                     { 
                         !(userId === id) 
                             ? <button className="transition ease-in-out duration-300 py-[2px] px-[6px] border border-black rounded-tl-lg rounded-br-lg hover:transition-colors hover:bg-black hover:text-white" disabled={ userId ? false : true}>{isFollowing ? 'Отписаться' : 'Подписаться'}</button>
-                            : <Link href={'/'} className="transition ease-in-out duration-300 py-[2px] px-[6px] border border-black rounded-tl-lg rounded-br-lg hover:transition-colors hover:bg-black hover:text-white">Настройки</Link>
+                            : <Link href={'/settings'} className="transition ease-in-out duration-300 py-[2px] px-[6px] border border-black rounded-tl-lg rounded-br-lg hover:transition-colors hover:bg-black hover:text-white">Настройки</Link>
                     }
                 </div>
                 <div className="w-full h-[1px] bg-stone-400 my-[16px]"></div>
                 <div className="flex flex-col items-center gap-4">
+                { userId === id ? <MessageForm /> : null}
                     {
                         posts?.map( (post) => {
                             return (

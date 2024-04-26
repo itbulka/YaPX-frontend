@@ -88,7 +88,7 @@ export async function getUserById(userId: string) {
 }
 
 export async function getPostsFromUser(userId: string) {
-    const res = await fetch(`${url}/users/${userId}/posts?with=user&with=likes`, {
+    const res = await fetch(`${url}/users/${userId}/posts?page=1&per-page=15&sort=desc&with=user&with=likes`, {
       method: 'GET',
       headers: {
         accept: 'application/json',
