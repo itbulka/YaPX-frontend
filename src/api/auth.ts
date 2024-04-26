@@ -1,4 +1,5 @@
 import { Success } from '@/models';
+import { useAuthStore } from '@/store/auth';
 
 import { URL } from '.';
 
@@ -30,7 +31,6 @@ export async function signIn(form: SignInData) {
     headers: {
       accept: 'application/json',
     },
-    credentials: 'include',
     body: JSON.stringify(form),
   });
 
@@ -38,10 +38,9 @@ export async function signIn(form: SignInData) {
     throw new Error(res.statusText);
   }
 
-  const data = (await res.json()) as UserAuth;
-  document.cookie = `auth_session=${data.id}; path=/`;
+  const data = await res.json();
 
-  return data;
+  return data as UserAuth;
 }
 
 export async function signUp(form: SignUpData) {
@@ -50,7 +49,6 @@ export async function signUp(form: SignUpData) {
     headers: {
       accept: 'application/json',
     },
-    credentials: 'include',
     body: JSON.stringify(form),
   });
 
@@ -68,8 +66,8 @@ export async function signOut() {
     method: 'GET',
     headers: {
       accept: 'application/json',
+      authorization: 'Bearer ' + useAuthStore.getState().sessionId ?? '',
     },
-    credentials: 'include',
   });
 
   if (!res.ok) {
@@ -86,8 +84,8 @@ export async function me() {
     method: 'GET',
     headers: {
       accept: 'application/json',
+      authorization: 'Bearer ' + useAuthStore.getState().sessionId ?? '',
     },
-    credentials: 'include',
   });
 
   if (!res.ok) {

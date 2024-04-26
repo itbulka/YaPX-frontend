@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 import { Post as PostType } from '@/models';
-import { useUserStore } from '@/store/user';
+import { useAuthStore } from '@/store/auth';
 import { cn } from '@/utils/cn';
 
 export type Props = {
@@ -9,7 +9,7 @@ export type Props = {
 };
 
 export const Post = ({ post }: Props) => {
-  const userId = useUserStore(state => state.userId);
+  const userId = useAuthStore(state => state.userId);
   const userName = post.user?.nickname ?? 'anonymous';
   const created = post.createdAt
     ? new Date(post.createdAt).toLocaleDateString('ru-RU', { hour: 'numeric', minute: 'numeric' })
