@@ -11,7 +11,6 @@ import { createPost } from '@/utils/api/posts';
 
 const formSchema = z.object({
   text: z.string().min(1, 'Введите сообщение'),
-  
 });
 
 type Form = z.infer<typeof formSchema>;
@@ -24,17 +23,17 @@ export default function MessageForm() {
 
   const loginMutation = useMutation({
     mutationFn: (form: Form) => createPost(form),
-    onSuccess: (data) => {
+    onSuccess: data => {
       if (data.id) {
-        setUserId(data.id)
-        router.replace('/')
+        setUserId(data.id);
+        router.replace('/');
       }
     },
-    onError: (err) => {
-      console.log(err.message)
-      setSuccess(false)
-    }
-  })
+    onError: err => {
+      console.log(err.message);
+      setSuccess(false);
+    },
+  });
 
   const {
     register,
@@ -45,9 +44,14 @@ export default function MessageForm() {
   });
 
   return (
-   <form action="" className='flex gap-4 min-w-80 w-full max-w-96 justify-between'>
-    <input type="text" className='py-1 px-2 border rounded-md w-full focus:outline-none focus:border-black'/>
-    <button className='self-end min-w-24 max-w-32 bg-sky-600 rounded-md text-white py-1 px-2'>Отправить</button>
-   </form>
+    <form action="" className="flex w-full min-w-80 max-w-96 justify-between gap-4">
+      <input
+        type="text"
+        className="w-full rounded-md border px-2 py-1 focus:border-black focus:outline-none"
+      />
+      <button className="min-w-24 max-w-32 self-end rounded-md bg-sky-600 px-2 py-1 text-white">
+        Отправить
+      </button>
+    </form>
   );
 }

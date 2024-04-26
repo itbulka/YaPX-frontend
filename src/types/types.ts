@@ -1,25 +1,25 @@
 export interface IUser {
-    id: string,
-    name: string,
-    nickname: string,
-    createdAd: string,
-    followers?: IUser[],
-    likedPosts?: Record<'post', IPost>[]
+  id: string;
+  name: string;
+  nickname: string;
+  createdAd: string;
+  followers?: IUser[];
+  likedPosts?: Record<'post', IPost>[];
 }
 
 export interface IPost {
-    id: string,
-    text: string,
-    createdAt: string,
-    user?: IUser,
-    likes?: Omit<IUser, 'name' | 'nickname' | 'createdAd'>[]
+  id: string;
+  text: string;
+  createdAt: string;
+  user?: IUser;
+  likes?: Omit<IUser, 'name' | 'nickname' | 'createdAd'>[];
 }
 
 export interface IFolower {
-    userId: string,
-    followerId: string
+  userId: string;
+  followerId: string;
 }
 
 export interface ISuccess {
-    succes: boolean
+  succes: boolean;
 }

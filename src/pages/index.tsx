@@ -1,8 +1,8 @@
-import { Post } from "@/components/Post/Post";
-import { Layout } from "@/components/layout";
-import { getPosts } from "@/utils/api/posts";
-import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { Post } from '@/components/Post/Post';
+import { Layout } from '@/components/layout';
+import { getPosts } from '@/utils/api/posts';
+import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
 
 export default function Home() {
   const [page, setPage] = useState(1);
@@ -18,11 +18,7 @@ export default function Home() {
       <div className="flex flex-col gap-5">
         {status === 'pending' ? 'Loading' : null}
 
-        {status === 'success' ? (
-          posts.map(post => (
-              <Post key={post.id} post={post} />
-          ))
-        ) : null}
+        {status === 'success' ? posts.map(post => <Post key={post.id} post={post} />) : null}
       </div>
     </Layout>
   );
