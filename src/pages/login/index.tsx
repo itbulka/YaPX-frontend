@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -19,8 +19,19 @@ type Form = z.infer<typeof formSchema>;
 
 export default function SignInPage() {
   const router = useRouter();
+  const userId = useAuthStore(state => state.userId);
   const setSessionId = useAuthStore(state => state.setSessionId);
   const setUserId = useAuthStore(state => state.setUserId);
+
+  useEffect(() => {
+    if (typeof window !== undefined) {
+      const data = localStorage.getItem('yapx-auth');
+      const userData = data ? JSON.parse(data!) : null;
+      if (userId || userData.state.userId ) {
+        router.replace('/');
+      }
+    }
+  }, [router, userId]);
 
   const [success, setSuccess] = useState(false);
 
@@ -84,6 +95,7 @@ export default function SignInPage() {
           </label>
           <input
             {...register('nickname')}
+            id='nickname'
             className="w-full rounded-md border px-2 py-1 focus:border-black focus:outline-none"
             type="text"
             placeholder="ivan_ivanov"
@@ -99,6 +111,7 @@ export default function SignInPage() {
           </label>
           <input
             {...register('password')}
+            id='password'
             className="w-full rounded-md border px-2 py-1 focus:border-black focus:outline-none"
             type="password"
             placeholder="*****"

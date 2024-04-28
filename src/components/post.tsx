@@ -3,12 +3,50 @@ import Link from 'next/link';
 import { Post as PostType } from '@/models';
 import { useAuthStore } from '@/store/auth';
 import { cn } from '@/utils/cn';
+import { useMutation } from '@tanstack/react-query';
+import { addLikePost, removeLikePost } from '@/api/posts';
+import { useEffect, useState } from 'react';
 
 export type Props = {
   post: PostType;
 };
 
 export const Post = ({ post }: Props) => {
+  const [liked, setLiked] = useState<boolean>();
+  const [likesCount, setLikesCount] = useState<number>();
+
+  const like = useMutation({
+    mutationFn: () => addLikePost(post.id),
+    onSuccess: data => {
+      if (data) {
+        setLiked(!liked);
+        setLikesCount(prev => prev! + 1);
+      }
+    },
+    onError: err => {
+      console.log(err.message);
+    },
+  });
+  
+  {/* множественное нажатие */}
+  const unLike = useMutation({
+    mutationFn: () => removeLikePost(post.id),
+    onSuccess: data => {
+      if (data) {
+        setLiked(!liked);
+        setLikesCount(prev => prev! - 1);
+      }
+    },
+    onError: err => {
+      console.log(err.message);
+    },
+  });
+
+  useEffect(() => {
+    setLikesCount(post.likes?.length ?? 0);
+    setLiked(post.likes?.find(elem => elem.user.id === userId) ? true : false);
+  }, [])
+
   const userId = useAuthStore(state => state.userId);
   const userName = post.user?.nickname ?? 'anonymous';
   const created = post.createdAt
@@ -17,7 +55,6 @@ export const Post = ({ post }: Props) => {
   const text = post.text;
 
   return (
-    <Link href={`/post/${post.id}`}>
       <article className="flex w-96 flex-col gap-2 rounded-md p-4 shadow hover:bg-slate-100">
         <div className="flex items-center justify-between">
           <Link
@@ -28,20 +65,23 @@ export const Post = ({ post }: Props) => {
           </Link>
           <p className="t text-xs text-stone-400">{created}</p>
         </div>
-        <p className="">{text}</p>
+        <Link href={`/post/${post.id}`}>
+          <p className="">{text}</p>
+        </Link>
         <div className="flex items-center justify-end gap-1">
-          <p className="text-sm">{post.likes?.length ?? 0}</p>
-          <button onClick={() => console.log('click like')} disabled={userId ? false : true}>
+          <p className="text-sm">{likesCount}</p>
+          <button onClick={liked ? () => unLike.mutate() : () => like.mutate()} disabled={!userId || userId === post.user?.id ? true : false}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
-              strokeWidth={1.5}
+              strokeWidth={1.2}
               stroke="currentColor"
-              className={cn('h-6 w-6', {
-                'hover:fill-red-300 hover:stroke-red-300': userId ? true : false,
-                'stroke-gray-500': userId ? false : true,
-              })}
+              className={cn('h-5 w-5 transition-colors ease-in-out',
+                userId && userId !== post.user?.id ? 'hover:fill-red-400 hover:stroke-transparent' : ' fill-slate-300',
+                userId ? 'stroke-gray-500' : 'true',
+                (liked ? "fill-red-400" : "")
+              )}
             >
               <path
                 strokeLinecap="round"
@@ -52,6 +92,5 @@ export const Post = ({ post }: Props) => {
           </button>
         </div>
       </article>
-    </Link>
   );
 };

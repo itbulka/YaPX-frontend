@@ -21,13 +21,11 @@ export default function MessageForm() {
 
   const [success, setSuccess] = useState(false);
 
-  const loginMutation = useMutation({
+  const postMutation = useMutation({
     mutationFn: (form: Form) => createPost(form),
-    onSuccess: data => {
-      if (data.id) {
-        setUserId(data.id);
-        router.replace('/');
-      }
+    onSuccess: () => {
+        setSuccess(true);
+        router.reload();
     },
     onError: err => {
       console.log(err.message);
@@ -44,12 +42,18 @@ export default function MessageForm() {
   });
 
   return (
-    <form action="" className="flex w-full min-w-80 max-w-96 justify-between gap-4">
+    <form onSubmit={handleSubmit(data => postMutation.mutate(data))} className="flex w-full min-w-80 max-w-96 justify-between gap-4">
       <input
+        {...register('text')}
         type="text"
         className="w-full rounded-md border px-2 py-1 focus:border-black focus:outline-none"
       />
-      <button className="min-w-24 max-w-32 self-end rounded-md bg-sky-600 px-2 py-1 text-white">
+      {errors.text?.message && (
+              <p className="ml-4 text-[10px] text-red-500">{errors.text?.message}</p>
+            )}
+      <button className="min-w-24 max-w-32 self-end rounded-md bg-sky-600 px-2 py-1 text-white hover:bg-sky-700"
+        type='submit'
+      >
         Отправить
       </button>
     </form>

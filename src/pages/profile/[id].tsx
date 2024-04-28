@@ -1,20 +1,23 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useQuery } from '@tanstack/react-query';
-
-import { getPostsFromUser, getUserById } from '@/api/users';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { following, getPostsFromUser, getUserById, unFollowing } from '@/api/users';
 import MessageForm from '@/components/message-form';
 import { Post } from '@/components/post';
 import { Layout } from '@/layouts';
 import { useAuthStore } from '@/store/auth';
+import { cn } from '@/utils/cn';
 
 export default function Profile() {
   const router = useRouter();
   const id = router.query.id as string;
 
+  const sessionId = useAuthStore(state => state.sessionId) ?? '';
   const userId = useAuthStore(state => state.userId);
-  const [isFollowing, setFollowing] = useState(false);
+
+  const [isFollowing, setFollowing] = useState<boolean>();
+  const [followers, setFollowers] = useState<number>();
 
   const { data: user, status } = useQuery({
     queryKey: ['user', null, id],
@@ -25,10 +28,42 @@ export default function Profile() {
     queryKey: ['postsUser', null, id],
     queryFn: async () => getPostsFromUser(id),
   });
+  
+  const follow = useMutation({
+    mutationFn: () => following(id, sessionId),
+    onSuccess: data => {
+      if (data) {
+        setFollowing(!isFollowing);
+        setFollowers(prev => prev! + 1);
+      }
+    },
+    onError: err => {
+      console.log(err.message);
+    },
+  });
+  
+  {/* множественное нажатие */}
+  const unFollow = useMutation({
+    mutationFn: () => unFollowing(id, sessionId),
+    onSuccess: data => {
+      if (data) {
+        setFollowing(!isFollowing);
+        setFollowers(prev => prev! - 1);
+      }
+    },
+    onError: err => {
+      console.log(err.message);
+    },
+  });
 
+  {/* непонятно, насколько хорошее решение */}
   useEffect(() => {
-    setFollowing(user?.followers?.find(follower => follower.id === userId) ? true : false);
-  }, [userId, user]);
+    if (status === 'success') {
+      setFollowing(user?.followers?.find(elem => elem.follower.id === userId) ? true : false);
+      setFollowers(user?.followers?.length ?? 0);
+    }
+  }, [status, userId]);
+
 
   return (
     <Layout>
@@ -44,12 +79,13 @@ export default function Profile() {
                 </h2>
                 <p className="text-xs text-slate-800">{user?.name ?? 'anonymous'}</p>
               </div>
-              <p className="fonst-regular text-sm">{`${user?.followers?.length ?? 0} followers`}</p>
+              <p className="fonst-regular text-sm">{`${followers} followers`}</p>
               <p className="fonst-regular text-sm">{`${posts?.length ?? 0} posts`}</p>
             </div>
-            {!(userId === id) ? (
+            {(userId !== id) ? (
               <button
-                className="rounded-br-lg rounded-tl-lg border border-black px-[6px] py-[2px] transition duration-300 ease-in-out hover:bg-black hover:text-white hover:transition-colors"
+                onClick={isFollowing ? () => unFollow.mutate() : () => follow.mutate()}
+                className={cn(("rounded-br-lg rounded-tl-lg border border-slate-400 px-[6px] py-[2px] transition duration-300 ease-in-out"), (userId ? "hover:bg-slate-400 hover:text-white hover:transition-colors" : "bg-slate-200"))}
                 disabled={userId ? false : true}
               >
                 {isFollowing ? 'Отписаться' : 'Подписаться'}
@@ -57,7 +93,7 @@ export default function Profile() {
             ) : (
               <Link
                 href={'/settings'}
-                className="rounded-br-lg rounded-tl-lg border border-black px-[6px] py-[2px] transition duration-300 ease-in-out hover:bg-black hover:text-white hover:transition-colors"
+                className="rounded-br-lg rounded-tl-lg border border-slate-400 px-[6px] py-[2px] transition duration-300 ease-in-out hover:bg-slate-200 hover:text-white hover:transition-colors"
               >
                 Настройки
               </Link>
@@ -68,9 +104,9 @@ export default function Profile() {
             {userId === id ? <MessageForm /> : null}
             {posts?.map(post => {
               return (
-                <Link key={post.id} href={`/post/${post.id}`}>
-                  <Post post={post} />
-                </Link>
+                
+                  <Post key={post.id} post={post} />
+                
               );
             })}
           </div>

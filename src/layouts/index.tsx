@@ -63,10 +63,10 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
               Профиль
             </Link>
             <Link
-              href={'/my'}
+              href={'/subscribes'}
               className="rounded-md p-1 px-3 text-sm text-slate-800 transition duration-300 ease-in hover:bg-gray-400 hover:text-white hover:transition-colors"
             >
-              Мои посты
+              Мои подписки
             </Link>
             <Link
               href={'/settings'}

@@ -1,6 +1,7 @@
 import { Follower, Post, Success, User } from '@/models';
 
 import { URL } from '.';
+import { useAuthStore } from '@/store/auth';
 
 export type UserReg = {
   id: string;
@@ -40,7 +41,8 @@ export async function updateUser(form: EditUserData) {
   const res = await fetch(`${URL}/users`, {
     method: 'PUT',
     headers: {
-      accept: 'application/json',
+      accept: 'application/json',      
+      authorization: 'Bearer ' + useAuthStore.getState().sessionId ?? '',
     },
     body: JSON.stringify(form),
   });
@@ -58,7 +60,8 @@ export async function deleteUser() {
   const res = await fetch(`${URL}/users`, {
     method: 'DELETE',
     headers: {
-      accept: 'application/json',
+      accept: 'application/json',   
+      authorization: 'Bearer ' + useAuthStore.getState().sessionId ?? '',
     },
   });
 
@@ -72,7 +75,7 @@ export async function deleteUser() {
 }
 
 export async function getUserById(userId: string) {
-  const res = await fetch(`${URL}/users/${userId}`, {
+  const res = await fetch(`${URL}/users/${userId}?with=followers`, {
     method: 'GET',
     headers: {
       accept: 'application/json',
@@ -108,11 +111,12 @@ export async function getPostsFromUser(userId: string) {
   return data as Post[];
 }
 
-export async function following(userId: string) {
+export async function following(userId: string, auth: string) {
   const res = await fetch(`${URL}/users/${userId}/followings`, {
     method: 'POST',
     headers: {
       accept: 'application/json',
+      Authorization: `Bearer ${auth}`,
     },
   });
 
@@ -125,11 +129,12 @@ export async function following(userId: string) {
   return data as Follower;
 }
 
-export async function unfollowing(userId: string) {
+export async function unFollowing(userId: string, auth: string) {
   const res = await fetch(`${URL}/users/${userId}/followings`, {
     method: 'DELETE',
     headers: {
       accept: 'application/json',
+      Authorization: `Bearer ${auth}`,
     },
   });
 

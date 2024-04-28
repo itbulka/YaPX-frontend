@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -18,17 +18,26 @@ const formSchema = z.object({
 
 type Form = z.infer<typeof formSchema>;
 
-export default function RegistationForm() {
+export default function RegistrationForm() {
+  const userId = useAuthStore(state => state.userId);
   const router = useRouter();
-  const setUserId = useAuthStore(state => state.setUserId);
   const [success, setSuccess] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== undefined) {
+      const data = localStorage.getItem('yapx-auth');
+      const userData = data ? JSON.parse(data!) : null;
+      if (userId || userData.state.userId ) {
+        router.replace('/');
+      }
+    }
+  }, [router, userId]);
 
   const loginMutation = useMutation({
     mutationFn: (form: Form) => signUp(form),
     onSuccess: data => {
       if (data.id) {
-        setUserId(data.id);
-        router.replace('/');
+        router.push('/login');
       }
     },
     onError: err => {
@@ -77,14 +86,16 @@ export default function RegistationForm() {
         </div>
 
         <div>
-          <label htmlFor="password" className="block pl-1 text-sm">
+          <label htmlFor="name" className="block pl-1 text-sm">
             Имя Фамилия
           </label>
           <input
             {...register('name')}
+            id='name'
             className="w-full rounded-md border px-2 py-1 focus:border-black focus:outline-none"
             type="text"
             placeholder="Иван Иванов"
+            autoComplete='true'
           />
           {errors.name?.message && (
             <p className="ml-4 text-[10px] text-red-500">{errors.name?.message}</p>
@@ -92,14 +103,16 @@ export default function RegistationForm() {
         </div>
 
         <div>
-          <label htmlFor="password" className="block pl-1 text-sm">
+          <label htmlFor="nickname" className="block pl-1 text-sm">
             Имя пользователя
           </label>
           <input
             {...register('nickname')}
+            id='nickname'
             className="w-full rounded-md border px-2 py-1 focus:border-black focus:outline-none"
             type="text"
             placeholder="Ivan_Ivanov"
+            autoComplete='true'
           />
           {errors.nickname?.message && (
             <p className="ml-4 text-[10px] text-red-500">{errors.nickname?.message}</p>
@@ -112,6 +125,7 @@ export default function RegistationForm() {
           </label>
           <input
             {...register('password')}
+            id='password'
             className="w-full rounded-md border px-2 py-1 focus:border-black focus:outline-none"
             type="password"
             placeholder="******"
