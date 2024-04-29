@@ -4,17 +4,40 @@ import { Post as PostType } from '@/models';
 import { useAuthStore } from '@/store/auth';
 import { cn } from '@/utils/cn';
 import { useMutation } from '@tanstack/react-query';
-import { addLikePost, removeLikePost } from '@/api/posts';
-import { useEffect, useState } from 'react';
+import { addLikePost, deletePostById, removeLikePost, updatePostById } from '@/api/posts';
+import { useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/router';
+import { boolean, z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
 
 export type Props = {
   post: PostType;
 };
 
+const formSchema = z.object({
+  text: z.string().min(1, 'Введите сообщение'),
+});
+
+type Form = z.infer<typeof formSchema>;
+
 export const Post = ({ post }: Props) => {
   const [liked, setLiked] = useState<boolean>();
   const [likesCount, setLikesCount] = useState<number>();
   const [click, setClick] = useState<boolean>();
+  const [isEdit, setIsEdit] = useState(false);
+  const [messageText, setMessageText] = useState(post.text)
+  const router = useRouter();
+
+  const postUpdateMutation = useMutation({
+    mutationFn: (form: Form) => updatePostById(post.id,form),
+    onSuccess: () => {
+        router.reload();
+    },
+    onError: err => {
+      console.log(err.message)
+    },
+  });
 
   const like = useMutation({
     mutationFn: () => addLikePost(post.id),
@@ -43,6 +66,16 @@ export const Post = ({ post }: Props) => {
     },
   });
 
+  const handleDeletePost = useMutation({
+    mutationFn: () => deletePostById(post.id),
+    onSuccess: () => {
+      router.reload()
+    },
+    onError: err => {
+      console.log(err.message);
+    },
+  });
+
   useEffect(() => {
     setLikesCount(post.likes?.length ?? 0);
     setLiked(post.likes?.find(elem => elem.user.id === userId) ? true : false);
@@ -55,6 +88,14 @@ export const Post = ({ post }: Props) => {
     ? new Date(post.createdAt).toLocaleDateString('ru-RU', { hour: 'numeric', minute: 'numeric' })
     : '';
   const text = post.text;
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Form>({
+    resolver: zodResolver(formSchema),
+  });
 
   return (
       <article className="flex w-96 flex-col gap-2 rounded-md p-4 shadow hover:bg-slate-100">
@@ -73,9 +114,10 @@ export const Post = ({ post }: Props) => {
         <div className="flex items-center justify-end gap-3">
 
           {/*ведро*/}
+
           {userId && userId === post.user?.id ? (
           <div className="flex items-center justify-end gap-1">
-            <button type='button'>
+            <button type='button' onClick={() => handleDeletePost.mutate()}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none" viewBox="0 0 24 24"
@@ -89,8 +131,10 @@ export const Post = ({ post }: Props) => {
                 />
               </svg>
             </button>
+
             {/* редактирование */}
-            <button type='button'>
+
+            <button type='button' onClick={() => {setIsEdit(prev => !prev)}}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -136,6 +180,26 @@ export const Post = ({ post }: Props) => {
             </button>
           </div>
         </div>
+        {(userId === post.user?.id) && isEdit ?
+        (<div className=' pt-1'>
+          <form onSubmit={handleSubmit(data => postUpdateMutation.mutate(data))} className="flex w-full min-w-80 max-w-96 justify-between gap-4">
+            <input
+              {...register('text')}
+              value={messageText}
+              onChange={(e) => {setMessageText(e.target.value)}}
+              type="text"
+              className="w-full rounded-md border px-2 py-1 focus:border-black focus:outline-none hover:border-slate-300"
+            />
+            {errors.text?.message && (
+              <p className="ml-4 text-[10px] text-red-500">{errors.text?.message}</p>
+            )}
+            <button className="min-w-24 max-w-32 self-end rounded-md bg-sky-600 px-2 py-1 text-white hover:bg-sky-700"
+              type='submit'
+            >
+              Изменить
+            </button>
+          </form>
+        </div>) : null }
       </article>
   );
 };

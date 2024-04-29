@@ -84,9 +84,11 @@ export async function updatePostById(postId: string, form: CreatePostData) {
   const res = await fetch(`${URL}/posts/${postId}`, {
     method: 'PUT',
     headers: {
-      accept: 'application/json',
+      accept: 'application/json',     
+      authorization: 'Bearer ' + useAuthStore.getState().sessionId ?? '',
     },
     body: JSON.stringify(form),
+    
   });
 
   if (!res.ok) {
@@ -103,6 +105,7 @@ export async function deletePostById(postId: string) {
     method: 'DELETE',
     headers: {
       accept: 'application/json',
+      authorization: 'Bearer ' + useAuthStore.getState().sessionId ?? '',
     },
   });
 
