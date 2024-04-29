@@ -46,7 +46,7 @@ export default function MessageForm() {
       <input
         {...register('text')}
         type="text"
-        className="w-full rounded-md border px-2 py-1 focus:border-black focus:outline-none"
+        className="w-full rounded-md border px-2 py-1 focus:border-black focus:outline-none hover:border-slate-300"
       />
       {errors.text?.message && (
               <p className="ml-4 text-[10px] text-red-500">{errors.text?.message}</p>
