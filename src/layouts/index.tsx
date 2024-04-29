@@ -77,7 +77,7 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
           </nav>
         ) : null}
 
-        <div className="flex flex-1 flex-col items-center justify-center gap-10">{children}</div>
+        <div className="flex flex-1 flex-col items-center justify-center gap-1">{children}</div>
       </div>
     </div>
   );

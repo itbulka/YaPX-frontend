@@ -7,10 +7,11 @@ import { Layout } from '@/layouts';
 import { useAuthStore } from '@/store/auth';
 import MessageForm from '@/components/message-form';
 import Loading from '@/components/loading';
+import Paginator from '@/components/pagination';
 
 export default function Home() {
   const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(15);
+  const [perPage, setPerPage] = useState(5);
   const userId = useAuthStore(state => state.userId);
 
   const { data: posts, status } = useQuery({
@@ -30,6 +31,7 @@ export default function Home() {
           <>
             {userId ? <MessageForm /> : null}
             {posts.map(post => <Post key={post.id} post={post} />)}
+            <Paginator setter={setPage} page={page} perPage={perPage} />
           </>
           : null
         }

@@ -14,6 +14,7 @@ export type Props = {
 export const Post = ({ post }: Props) => {
   const [liked, setLiked] = useState<boolean>();
   const [likesCount, setLikesCount] = useState<number>();
+  const [click, setClick] = useState<boolean>();
 
   const like = useMutation({
     mutationFn: () => addLikePost(post.id),
@@ -45,6 +46,7 @@ export const Post = ({ post }: Props) => {
   useEffect(() => {
     setLikesCount(post.likes?.length ?? 0);
     setLiked(post.likes?.find(elem => elem.user.id === userId) ? true : false);
+    setClick(liked);
   }, [])
 
   const userId = useAuthStore(state => state.userId);
@@ -72,15 +74,17 @@ export const Post = ({ post }: Props) => {
           <p className="text-sm">{likesCount}</p>
           <button onClick={liked ? () => unLike.mutate() : () => like.mutate()} disabled={!userId || userId === post.user?.id ? true : false}>
             <svg
+              onClick={() => setClick(prev => !prev)}
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth={1.2}
               stroke="currentColor"
-              className={cn('h-5 w-5 transition-colors ease-in-out',
+              className={cn('h-5 w-5 transition-colors ease-in-out active:scale-150',
                 userId && userId !== post.user?.id ? 'hover:fill-red-400 hover:stroke-transparent' : ' fill-slate-300',
                 userId ? 'stroke-gray-500' : 'true',
-                (liked ? "fill-red-400" : "")
+                (liked ? "fill-red-400" : ""),
+                (click ? "fill-red-400" : "")
               )}
             >
               <path

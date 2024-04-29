@@ -2,16 +2,21 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { following, getPostsFromUser, getUserById, unFollowing } from '@/api/users';
+import { following, getAllPostsFromUser, getPostsFromUser, getUserById, unFollowing } from '@/api/users';
 import MessageForm from '@/components/message-form';
 import { Post } from '@/components/post';
 import { Layout } from '@/layouts';
 import { useAuthStore } from '@/store/auth';
 import { cn } from '@/utils/cn';
+import Paginator from '@/components/pagination';
+import Loading from '@/components/loading';
 
 export default function Profile() {
   const router = useRouter();
   const id = router.query.id as string;
+
+  const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(5)
 
   const sessionId = useAuthStore(state => state.sessionId) ?? '';
   const userId = useAuthStore(state => state.userId);
@@ -25,8 +30,13 @@ export default function Profile() {
   });
 
   const { data: posts } = useQuery({
-    queryKey: ['postsUser', null, id],
-    queryFn: async () => getPostsFromUser(id),
+    queryKey: ['postsUser', null, id, {page, perPage}],
+    queryFn: async () => getPostsFromUser(id, page, perPage),
+  });
+
+  const { data: allPosts } = useQuery({
+    queryKey: ['allUserPosts', null, id],
+    queryFn: async () => getAllPostsFromUser(id),
   });
   
   const follow = useMutation({
@@ -64,23 +74,24 @@ export default function Profile() {
     }
   }, [status, userId]);
 
-
   return (
     <Layout>
-      {status === 'pending' ? 'Loading' : null}
-
+      {status === 'pending' ? <Loading /> : null}
       {status === 'success' ? (
-        <div className="w-full">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="flex items-center gap-[4px]">
+
+        <div className="w-full flex flex-col items-center">
+          <div className="w-full flex items-center justify-between">
+            <div className='flex  gap-10'>
+              <div className="items-center gap-[4px]n">
                 <h2 className="text-xl font-semibold text-stone-950">
                   {user?.nickname ?? 'anonymous'}
                 </h2>
                 <p className="text-xs text-slate-800">{user?.name ?? 'anonymous'}</p>
               </div>
-              <p className="fonst-regular text-sm">{`${followers} followers`}</p>
-              <p className="fonst-regular text-sm">{`${posts?.length ?? 0} posts`}</p>
+              <div className='flex flex-col items-end justify-end'>
+                <p className=" text-sm text-slate-800">{`Подписчиков: ${followers}`}</p>
+                <p className="text-sm text-slate-800">{`Публикаций: ${allPosts?.length ?? 0}`}</p>
+              </div>
             </div>
             {(userId !== id) ? (
               <button
@@ -103,12 +114,11 @@ export default function Profile() {
           <div className="flex flex-col items-center gap-4">
             {userId === id ? <MessageForm /> : null}
             {posts?.map(post => {
-              return (
-                
-                  <Post key={post.id} post={post} />
-                
+              return (                
+                <Post key={post.id} post={post} />                
               );
             })}
+          <Paginator setter={setPage} page={page} perPage={perPage} />
           </div>
         </div>
       ) : null}

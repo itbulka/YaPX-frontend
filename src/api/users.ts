@@ -91,9 +91,29 @@ export async function getUserById(userId: string) {
   return data as User;
 }
 
-export async function getPostsFromUser(userId: string) {
+export async function getPostsFromUser(userId: string, page: number, perPage: number) {
   const res = await fetch(
-    `${URL}/users/${userId}/posts?page=1&per-page=15&sort=desc&with=user&with=likes`,
+    `${URL}/users/${userId}/posts?page=${page}&per-page=${perPage}&sort=desc&with=user&with=likes`,
+    {
+      method: 'GET',
+      headers: {
+        accept: 'application/json',
+      },
+    }
+  );
+
+  if (!res.ok) {
+    throw new Error(res.statusText);
+  }
+
+  const data = await res.json();
+
+  return data as Post[];
+}
+
+export async function getAllPostsFromUser(userId: string) {
+  const res = await fetch(
+    `${URL}/users/${userId}/posts`,
     {
       method: 'GET',
       headers: {
