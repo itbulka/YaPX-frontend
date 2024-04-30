@@ -1,70 +1,127 @@
-import { Post } from "@/components/Post/Post";
-import { Layout } from "@/components/layout";
-import MessageForm from "@/components/message-form";
-import { useUserStatus } from "@/slice/zustand";
-import { getPostsFromUser, getUserById } from "@/utils/api/users";
-import { useQuery } from "@tanstack/react-query";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { following, getAllPostsFromUser, getPostsFromUser, getUserById, unFollowing } from '@/api/users';
+import MessageForm from '@/components/message-form';
+import { Post } from '@/components/post';
+import { Layout } from '@/layouts';
+import { useAuthStore } from '@/store/auth';
+import { cn } from '@/utils/cn';
+import Paginator from '@/components/pagination';
+import Loading from '@/components/loading';
 
 export default function Profile() {
   const router = useRouter();
   const id = router.query.id as string;
 
-  const userId = useUserStatus(state => state.userId);
-    const [isFollowing, setFollowing] = useState(false);
+  const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(5)
 
-    const {data: user, status} = useQuery({
-        queryKey: ['user', null, id],
-        queryFn: async () => getUserById(id)
-    })
+  const sessionId = useAuthStore(state => state.sessionId) ?? '';
+  const userId = useAuthStore(state => state.userId);
 
-    const {data: posts} = useQuery({
-        queryKey: ['postsUser', null, id],
-        queryFn: async () => getPostsFromUser(id)
-    })
+  const [isFollowing, setFollowing] = useState<boolean>();
+  const [followers, setFollowers] = useState<number>();
 
-    useEffect(() => {
-        setFollowing(user?.followers?.find( follower => follower.id === userId) ? true : false);
-    }, [userId, user])
+  const { data: user, status } = useQuery({
+    queryKey: ['user', null, id],
+    queryFn: async () => getUserById(id),
+  });
 
-    return (
-        <Layout>
-            {status === 'pending' ? 'Loading' : null}
+  const { data: posts } = useQuery({
+    queryKey: ['postsUser', null, id, {page, perPage}],
+    queryFn: async () => getPostsFromUser(id, page, perPage),
+  });
 
-            {status === 'success' ? (
-                <div className="w-full">
-                <div className="flex justify-between items-center">
-                    <div>
-                        <div className="flex items-center gap-[4px]">
-                            <h2 className="text-xl font-semibold text-stone-950">{user?.nickname ?? 'anonymous'}</h2>
-                            <p className="text-xs text-slate-800">{user?.name ?? 'anonymous'}</p>
-                        </div>
-                        <p className="text-sm fonst-regular">{`${user?.followers?.length ?? 0} followers`}</p>
-                        <p className="text-sm fonst-regular">{`${posts?.length ?? 0} posts`}</p>
-                    </div>
-                    { 
-                        !(userId === id) 
-                            ? <button className="transition ease-in-out duration-300 py-[2px] px-[6px] border border-black rounded-tl-lg rounded-br-lg hover:transition-colors hover:bg-black hover:text-white" disabled={ userId ? false : true}>{isFollowing ? 'Отписаться' : 'Подписаться'}</button>
-                            : <Link href={'/settings'} className="transition ease-in-out duration-300 py-[2px] px-[6px] border border-black rounded-tl-lg rounded-br-lg hover:transition-colors hover:bg-black hover:text-white">Настройки</Link>
-                    }
-                </div>
-                <div className="w-full h-[1px] bg-stone-400 my-[16px]"></div>
-                <div className="flex flex-col items-center gap-4">
-                { userId === id ? <MessageForm /> : null}
-                    {
-                        posts?.map( (post) => {
-                            return (
-                                <Link key={post.id} href={`/post/${post.id}`}>
-                                    <Post post={post} />
-                                </Link>
-                            )
-                        })
-                    }
-                </div>
+  const { data: allPosts } = useQuery({
+    queryKey: ['allUserPosts', null, id],
+    queryFn: async () => getAllPostsFromUser(id),
+  });
+  
+  const follow = useMutation({
+    mutationFn: () => following(id, sessionId),
+    onSuccess: data => {
+      if (data) {
+        setFollowing(!isFollowing);
+        setFollowers(prev => prev! + 1);
+      }
+    },
+    onError: err => {
+      console.log(err.message);
+    },
+  });
+  
+  {/* множественное нажатие */}
+  const unFollow = useMutation({
+    mutationFn: () => unFollowing(id, sessionId),
+    onSuccess: data => {
+      if (data) {
+        setFollowing(!isFollowing);
+        setFollowers(prev => prev! - 1);
+      }
+    },
+    onError: err => {
+      console.log(err.message);
+    },
+  });
+
+  {/* непонятно, насколько хорошее решение */}
+  useEffect(() => {
+    if (status === 'success') {
+      setFollowing(user?.followers?.find(elem => elem.follower.id === userId) ? true : false);
+      setFollowers(user?.followers?.length ?? 0);
+    }
+  }, [status, userId]);
+
+  return (
+    <Layout>
+      {status === 'pending' ? <Loading /> : null}
+      {status === 'success' ? (
+
+        <div className="w-full flex flex-col items-center">
+          <div className="w-full flex items-center justify-between">
+            <div className='flex  gap-10'>
+              <div className="items-center gap-[4px]n">
+                <h2 className="text-xl font-semibold text-stone-950">
+                  {user?.nickname ?? 'anonymous'}
+                </h2>
+                <p className="text-xs text-slate-800">{user?.name ?? 'anonymous'}</p>
+              </div>
+              <div className='flex flex-col items-end justify-end'>
+                <p className=" text-sm text-slate-800">{`Подписчиков: ${followers}`}</p>
+                <p className="text-sm text-slate-800">{`Публикаций: ${allPosts?.length ?? 0}`}</p>
+              </div>
             </div>
-            ) : null}
-        </Layout>
-    );
+            {(userId !== id) ? (
+              <button
+                onClick={isFollowing ? () => unFollow.mutate() : () => follow.mutate()}
+                className={cn(("rounded-br-lg rounded-tl-lg border border-slate-400 px-[6px] py-[2px] transition duration-300 ease-in-out"), (userId ? "hover:bg-slate-400 hover:text-white hover:transition-colors" : "bg-slate-200"))}
+                disabled={userId ? false : true}
+              >
+                {isFollowing ? 'Отписаться' : 'Подписаться'}
+              </button>
+            ) : (
+              <Link
+                href={'/settings'}
+                className="rounded-br-lg rounded-tl-lg border border-slate-400 px-[6px] py-[2px] transition duration-300 ease-in-out hover:bg-slate-200 hover:text-white hover:transition-colors"
+              >
+                Настройки
+              </Link>
+            )}
+          </div>
+          <div className="my-[16px] h-[1px] w-full bg-stone-400"></div>
+          <div className="flex flex-col items-center gap-4">
+            {userId === id ? <MessageForm /> : null}
+            {posts?.map(post => {
+              return (                
+                <Post key={post.id} post={post} />                
+              );
+            })}
+          <Paginator setter={setPage} page={page} perPage={perPage} />
+          </div>
+        </div>
+      ) : null}
+    </Layout>
+  );
 }
