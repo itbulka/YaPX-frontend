@@ -1,14 +1,14 @@
+import { useRouter } from 'next/router';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import { signOut } from '@/api/auth';
 import { deleteUser, getUserById, updateUser } from '@/api/users';
+import { AuthProvider } from '@/components/auth-provider';
 import { Layout } from '@/layouts';
 import { useAuthStore } from '@/store/auth';
-import { signOut } from '@/api/auth';
-import { useRouter } from 'next/router';
-import { useEffect } from 'react';
 
 const formSchema = z.object({
   name: z.string(),
@@ -22,16 +22,7 @@ export default function Settings() {
   const router = useRouter();
   const userId = useAuthStore(state => state.userId) ?? '';
   const setUserId = useAuthStore(state => state.setUserId);
-
-  useEffect(() => {
-    if (typeof window !== undefined) {
-      const data = localStorage.getItem('yapx-auth');
-      const userData = data ? JSON.parse(data!) : null;
-      if (!userId || !userData.state.userId ) {
-        router.replace('/');
-      }
-    }
-  }, [router, userId]);
+  const setSessionId = useAuthStore(state => state.setSessionId);
 
   const { data: user } = useQuery({
     queryKey: ['user', null, userId],
@@ -51,7 +42,10 @@ export default function Settings() {
   const handleLogout = useMutation({
     mutationFn: signOut,
     onSuccess: data => {
-      if (data.success) setUserId(null);
+      if (data.success) {
+        setUserId(null);
+        setSessionId(null);
+      }
       router.replace(`/profile/${userId}`);
     },
     onError: err => {
@@ -63,8 +57,9 @@ export default function Settings() {
     mutationFn: deleteUser,
     onSuccess: data => {
       if (data.success) {
-        router.replace(`/`);
         setUserId(null);
+        setSessionId(null);
+        router.replace(`/`);
       }
     },
     onError: err => {
@@ -80,85 +75,88 @@ export default function Settings() {
     resolver: zodResolver(formSchema),
   });
 
-
   return (
     <Layout>
-      <div className="flex justify-center">
-        <form
-          onSubmit={handleSubmit(data => updateUserMutation.mutate({
-            name: data.name ? data.name : `${user?.name ?? ''}`,
-            nickname: data.nickname ? data.nickname : `${user?.nickname ?? ''}`,
-            password: data.password,
-          }))}
-          className="flex w-full min-w-80 max-w-96 flex-col gap-4"
-        >
-          <div>
-            <label htmlFor="password" className="block pl-1 text-sm">
-              Имя Фамилия
-            </label>
-            <input
-              {...register('name')}
-              className="w-full rounded-md border px-2 py-1 focus:border-black focus:outline-none"
-              type="text"
-              placeholder={`${user?.name ?? ''}`}
-            />
-            {errors.name?.message && (
-              <p className="ml-4 text-[10px] text-red-500">{errors.name?.message}</p>
+      <AuthProvider>
+        <div className="flex justify-center">
+          <form
+            onSubmit={handleSubmit(data =>
+              updateUserMutation.mutate({
+                name: data.name ? data.name : `${user?.name ?? ''}`,
+                nickname: data.nickname ? data.nickname : `${user?.nickname ?? ''}`,
+                password: data.password,
+              })
             )}
-          </div>
-
-          <div>
-            <label htmlFor="password" className="block pl-1 text-sm">
-              Имя пользователя
-            </label>
-            <input
-              {...register('nickname')}
-              className="w-full rounded-md border px-2 py-1 focus:border-black focus:outline-none"
-              type="text"
-              placeholder={`${user?.nickname ?? ''}`}
-            />
-            {errors.nickname?.message && (
-              <p className="ml-4 text-[10px] text-red-500">{errors.nickname?.message}</p>
-            )}
-          </div>
-
-          <div>
-            <label htmlFor="password" className="block pl-1 text-sm">
-              Пароль
-            </label>
-            <input
-              {...register('password')}
-              className="w-full rounded-md border px-2 py-1 focus:border-black focus:outline-none"
-              type="password"
-              placeholder="******"
-            />
-            {errors.password?.message && (
-              <p className="ml-4 text-[10px] text-red-500">{errors.password?.message}</p>
-            )}
-          </div>
-
-          <button
-            className="w-full self-end rounded-md bg-sky-600 px-2 py-1 text-white hover:bg-sky-700"
-            type="submit"
+            className="flex w-full min-w-80 max-w-96 flex-col gap-4"
           >
-            Сохранить
-          </button>
-          <button
-            className="rounded-m w-full self-end rounded-md border border-black px-2 py-1 hover:bg-slate-100"
-            type="button"
-            onClick={() => handleLogout.mutate()}
-          >
-            Выйти
-          </button>
-          <button
-            className="w-full self-end rounded-md bg-rose-700 px-2 py-1 text-white hover:bg-rose-800"
-            type="button"
-            onClick={() => handleDeleteAccount.mutate()}
-          >
-            Удалить аккаунт
-          </button>
-        </form>
-      </div>
+            <div>
+              <label htmlFor="password" className="block pl-1 text-sm">
+                Имя Фамилия
+              </label>
+              <input
+                {...register('name')}
+                className="w-full rounded-md border px-2 py-1 focus:border-black focus:outline-none"
+                type="text"
+                placeholder={`${user?.name ?? ''}`}
+              />
+              {errors.name?.message && (
+                <p className="ml-4 text-[10px] text-red-500">{errors.name?.message}</p>
+              )}
+            </div>
+
+            <div>
+              <label htmlFor="password" className="block pl-1 text-sm">
+                Имя пользователя
+              </label>
+              <input
+                {...register('nickname')}
+                className="w-full rounded-md border px-2 py-1 focus:border-black focus:outline-none"
+                type="text"
+                placeholder={`${user?.nickname ?? ''}`}
+              />
+              {errors.nickname?.message && (
+                <p className="ml-4 text-[10px] text-red-500">{errors.nickname?.message}</p>
+              )}
+            </div>
+
+            <div>
+              <label htmlFor="password" className="block pl-1 text-sm">
+                Пароль
+              </label>
+              <input
+                {...register('password')}
+                className="w-full rounded-md border px-2 py-1 focus:border-black focus:outline-none"
+                type="password"
+                placeholder="******"
+              />
+              {errors.password?.message && (
+                <p className="ml-4 text-[10px] text-red-500">{errors.password?.message}</p>
+              )}
+            </div>
+
+            <button
+              className="w-full self-end rounded-md bg-sky-600 px-2 py-1 text-white hover:bg-sky-700"
+              type="submit"
+            >
+              Сохранить
+            </button>
+            <button
+              className="rounded-m w-full self-end rounded-md border border-black px-2 py-1 hover:bg-slate-100"
+              type="button"
+              onClick={() => handleLogout.mutate()}
+            >
+              Выйти
+            </button>
+            <button
+              className="w-full self-end rounded-md bg-rose-700 px-2 py-1 text-white hover:bg-rose-800"
+              type="button"
+              onClick={() => handleDeleteAccount.mutate()}
+            >
+              Удалить аккаунт
+            </button>
+          </form>
+        </div>
+      </AuthProvider>
     </Layout>
   );
 }
