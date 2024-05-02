@@ -3,12 +3,14 @@ export type User = {
   name: string;
   nickname: string;
   createdAd: string;
-  followers?: {follower: {
-    id: string;
-    name: string;
-    nickname: string;
-    createdAd: string;
-  }}[];
+  followers?: {
+    follower: {
+      id: string;
+      name: string;
+      nickname: string;
+      createdAd: string;
+    };
+  }[];
   likedPosts?: {
     post: {
       id: string;

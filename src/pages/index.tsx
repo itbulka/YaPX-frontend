@@ -2,12 +2,12 @@ import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 
 import { getPosts } from '@/api/posts';
-import { Post } from '@/components/post';
+import Loading from '@/components/loading';
+import MessageForm from '@/components/message-form';
+import Paginator from '@/components/pagination';
+import { Post } from '@/components/post/post';
 import { Layout } from '@/layouts';
 import { useAuthStore } from '@/store/auth';
-import MessageForm from '@/components/message-form';
-import Loading from '@/components/loading';
-import Paginator from '@/components/pagination';
 
 export default function Home() {
   const [page, setPage] = useState(1);
@@ -22,19 +22,17 @@ export default function Home() {
   return (
     <Layout>
       <div className="flex flex-col gap-4">
-        {status === 'pending'
-        ? 
-        <Loading />
-        : null}
+        {status === 'pending' ? <Loading /> : null}
 
-        {status === 'success' ? 
+        {status === 'success' ? (
           <>
             {userId ? <MessageForm /> : null}
-            {posts.map(post => <Post key={post.id} post={post} />)}
+            {posts.map(post => (
+              <Post key={post.id} post={post} />
+            ))}
             <Paginator setter={setPage} page={page} perPage={perPage} />
           </>
-          : null
-        }
+        ) : null}
       </div>
     </Layout>
   );
