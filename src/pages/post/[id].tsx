@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import { useQuery } from '@tanstack/react-query';
 
 import { getPostById } from '@/api/posts';
-import { Post } from '@/components/post';
+import { Post } from '@/components/post/post';
 import { Layout } from '@/layouts';
 
 export default function PostId() {
