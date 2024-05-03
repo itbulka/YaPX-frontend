@@ -5,7 +5,7 @@ import { getPostById } from '@/api/posts';
 import { Post } from '@/components/post/post';
 import { Layout } from '@/layouts';
 
-export default function PostId() {
+export default function PostList() {
   const router = useRouter();
   const id = router.query.id;
 
@@ -16,7 +16,7 @@ export default function PostId() {
 
   return (
     <Layout>
-      <div className="flex flex-col gap-5">
+      <div className="flex flex-col gap-5 justify-center">
         {status === 'pending' ? 'Loading' : null}
 
         {status === 'success' ? <Post post={posts} /> : null}

@@ -45,7 +45,6 @@ export default function RegistrationForm() {
   });
 
   return (
-    <AuthProvider onlyOnAuth>
       <div className="mt-20 flex justify-center">
         <form
           onSubmit={handleSubmit(data => registrationMutation.mutate(data))}
@@ -134,6 +133,5 @@ export default function RegistrationForm() {
           </button>
         </form>
       </div>
-    </AuthProvider>
   );
 }
