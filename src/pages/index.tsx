@@ -3,9 +3,9 @@ import { useQuery } from '@tanstack/react-query';
 
 import { getPosts } from '@/api/posts';
 import Loading from '@/components/loading';
-import MessageForm from '@/components/message-form';
+import CreatePostForm from '@/components/message-form/CreatePostForm';
 import Paginator from '@/components/pagination';
-import { Post } from '@/components/post/post';
+import { Post } from '@/components/post/Post';
 import { Layout } from '@/layouts';
 import { useAuthStore } from '@/store/auth';
 
@@ -26,7 +26,7 @@ export default function Home() {
 
         {status === 'success' ? (
           <>
-            {userId ? <MessageForm /> : null}
+            {userId ? <CreatePostForm /> : null}
             {posts.map(post => (
               <Post key={post.id} post={post} />
             ))}

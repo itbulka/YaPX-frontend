@@ -11,9 +11,9 @@ import {
   unFollowing,
 } from '@/api/users';
 import Loading from '@/components/loading';
-import MessageForm from '@/components/message-form';
+import CreatePostForm from '@/components/message-form/CreatePostForm';
 import Paginator from '@/components/pagination';
-import { Post } from '@/components/post/post';
+import { Post } from '@/components/post/Post';
 import { Layout } from '@/layouts';
 import { useAuthStore } from '@/store/auth';
 import { cn } from '@/utils/cn';
@@ -127,7 +127,7 @@ export default function Profile() {
           </div>
           <div className="my-[16px] h-[1px] w-full bg-stone-400"></div>
           <div className="flex flex-col items-center gap-4">
-            {userId === id ? <MessageForm /> : null}
+            {userId === id ? <CreatePostForm /> : null}
             {posts?.map(post => {
               return <Post key={post.id} post={post} />;
             })}

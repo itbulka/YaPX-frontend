@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import { useQuery } from '@tanstack/react-query';
 
 import { getPostById } from '@/api/posts';
-import { Post } from '@/components/post/post';
+import { Post } from '@/components/post/Post';
 import { Layout } from '@/layouts';
 
 export default function PostList() {
@@ -16,7 +16,7 @@ export default function PostList() {
 
   return (
     <Layout>
-      <div className="flex flex-col gap-5 justify-center">
+      <div className="flex flex-col justify-center gap-5">
         {status === 'pending' ? 'Loading' : null}
 
         {status === 'success' ? <Post post={posts} /> : null}
