@@ -21,7 +21,7 @@ export default function Home() {
 
   return (
     <Layout>
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col items-center gap-4">
         {status === 'pending' ? <Loading /> : null}
 
         {status === 'success' ? (
@@ -30,7 +30,7 @@ export default function Home() {
             {posts.map(post => (
               <Post key={post.id} post={post} />
             ))}
-            <Paginator setter={setPage} page={page} perPage={perPage} />
+            <Paginator setter={setPerPage} page={page} perPage={perPage} />
           </>
         ) : null}
       </div>

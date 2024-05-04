@@ -36,12 +36,9 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
         </div>
       </div>
 
-      <main className='flex justify-center min-w-[50%]'>
-        <div className='pt-10'>
-          {children}
-        </div>
+      <main className="max-w-[50%] mx-auto">
+        <div className="pt-10">{children}</div>
       </main>
-    
     </>
   );
 };

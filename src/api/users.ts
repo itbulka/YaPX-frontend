@@ -111,25 +111,25 @@ export async function getPostsFromUser(userId: string, page: number, perPage: nu
   return data as Post[];
 }
 
-export async function getAllPostsFromUser(userId: string) {
-  const res = await fetch(
-    `${URL}/users/${userId}/posts`,
-    {
-      method: 'GET',
-      headers: {
-        accept: 'application/json',
-      },
-    }
-  );
+// export async function getAllPostsFromUser(userId: string) {
+//   const res = await fetch(
+//     `${URL}/users/${userId}/posts`,
+//     {
+//       method: 'GET',
+//       headers: {
+//         accept: 'application/json',
+//       },
+//     }
+//   );
 
-  if (!res.ok) {
-    throw new Error(res.statusText);
-  }
+//   if (!res.ok) {
+//     throw new Error(res.statusText);
+//   }
 
-  const data = await res.json();
+//   const data = await res.json();
 
-  return data as Post[];
-}
+//   return data as Post[];
+// }
 
 export async function following(userId: string, auth: string) {
   const res = await fetch(`${URL}/users/${userId}/followings`, {
