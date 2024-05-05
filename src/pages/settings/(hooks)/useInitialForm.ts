@@ -12,6 +12,6 @@ export const useInitialForm = (reset: UseFormReset<TypeUserForm>) => {
       nickname: data?.nickname ?? '',
       name: data?.name ?? '',
     })
-  }, [isSuccess])
+  }, [data?.name, data?.nickname, isSuccess, reset])
 
 }

@@ -14,7 +14,7 @@ export const useUser = (id: string) => {
 
   useEffect(() => {
     if (data && isSuccess) setUser(data);
-  }, [isSuccess]);
+  }, [data, isSuccess]);
 
   return { user,  isPending };
 };
