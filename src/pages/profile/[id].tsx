@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
+import { SettingsIcon } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { SettingsIcon } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 import Loading from '@/components/loading';
 import CreatePostForm from '@/components/message-form/CreatePostForm';
@@ -11,10 +11,10 @@ import { Layout } from '@/layouts';
 import { useAuthStore } from '@/store/auth';
 import { cn } from '@/utils/cn';
 
-import { useFollow } from './hooks/useFollow';
-import { usePostsUser } from './hooks/usePostsUser';
-import { useUnfollow } from './hooks/useUnfollow';
-import { useUser } from './hooks/useUser';
+import { useFollow } from '../../hooks/useFollow';
+import { usePostsUser } from '../../hooks/usePostsUser';
+import { useUnfollow } from '../../hooks/useUnfollow';
+import { useUser } from '../../hooks/useUser';
 
 export default function Profile() {
   const router = useRouter();

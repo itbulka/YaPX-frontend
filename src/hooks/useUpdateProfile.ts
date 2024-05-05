@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { updateUser } from '@/api/users';
 
-import { TypeUserForm } from '..';
+import { TypeUserForm } from '../pages/settings';
 
 export const useUpdateProfile = () => {
   const queryClient = useQueryClient();
