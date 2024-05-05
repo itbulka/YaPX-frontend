@@ -6,15 +6,15 @@ import { SettingsIcon } from 'lucide-react';
 import Loading from '@/components/loading';
 import CreatePostForm from '@/components/message-form/CreatePostForm';
 import Paginator from '@/components/pagination';
-import { Post } from '@/components/post/Post';
+import { Post } from '@/components/post/post';
 import { Layout } from '@/layouts';
 import { useAuthStore } from '@/store/auth';
 import { cn } from '@/utils/cn';
 
-import { useFollow } from './(hooks)/useFollow';
-import { usePostsUser } from './(hooks)/usePostsUser';
-import { useUnfollow } from './(hooks)/useUnfollow';
-import { useUser } from './(hooks)/useUser';
+import { useFollow } from './hooks/useFollow';
+import { usePostsUser } from './hooks/usePostsUser';
+import { useUnfollow } from './hooks/useUnfollow';
+import { useUser } from './hooks/useUser';
 
 export default function Profile() {
   const router = useRouter();
@@ -52,9 +52,11 @@ export default function Profile() {
   });
 
   useEffect(() => {
-    setFollowing(user?.followers?.find(elem => elem.follower.id === userId) ? true : false);
-    setFollowers(user?.followers?.length ?? 0);
-  }, []);
+    if (user && user.followers) {
+      setFollowing(user.followers.find(elem => elem.follower.id === userId) ? true : false);
+      setFollowers(user.followers.length ?? 0);
+    }
+  }, [user, userId]);
 
   return (
     <Layout>

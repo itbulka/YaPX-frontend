@@ -7,7 +7,7 @@ import { AuthProvider } from '@/components/auth-provider';
 import Loading from '@/components/loading';
 import CreatePostForm from '@/components/message-form/CreatePostForm';
 import Paginator from '@/components/pagination';
-import { Post } from '@/components/post/Post';
+import { Post } from '@/components/post/post';
 import { Layout } from '@/layouts';
 import { useAuthStore } from '@/store/auth';
 

@@ -60,7 +60,7 @@ export const Post = ({ post }: Props) => {
   useEffect(() => {
     setLikesCount(post.likes?.length ?? 0);
     setLiked(post.likes?.find(elem => elem.user.id === userId) ? true : false);
-  }, []);
+  }, [post.likes, userId]);
 
   return (
     <article className="flex w-96 flex-col gap-2 rounded-md bg-zinc-900 p-4">

@@ -9,7 +9,7 @@ const formSchema = z.object({
   text: z.string().min(1, 'Введите сообщение'),
 });
 
-type Form = z.infer<typeof formSchema>;
+export type Form = z.infer<typeof formSchema>;
 
 export default function CreatePostForm() {
   const { mutate, isSuccess } = useCreatePost();

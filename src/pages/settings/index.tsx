@@ -5,9 +5,9 @@ import { z } from 'zod';
 import { AuthProvider } from '@/components/auth-provider';
 import { Layout } from '@/layouts';
 
-import { useDeleteProfile } from './(hooks)/useDeleteProfile';
-import { useInitialForm } from './(hooks)/useInitialForm';
-import { useUpdateProfile } from './(hooks)/useUpdateProfile';
+import { useDeleteProfile } from './hooks/useDeleteProfile';
+import { useInitialForm } from './hooks/useInitialForm';
+import { useUpdateProfile } from './hooks/useUpdateProfile';
 
 const formSchema = z.object({
   name: z.string(),
