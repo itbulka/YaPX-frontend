@@ -52,9 +52,11 @@ export default function Profile() {
   });
 
   useEffect(() => {
-    setFollowing(user?.followers?.find(elem => elem.follower.id === userId) ? true : false);
-    setFollowers(user?.followers?.length ?? 0);
-  }, []);
+    if (user && user.followers) {
+      setFollowing(user.followers.find(elem => elem.follower.id === userId) ? true : false);
+      setFollowers(user.followers.length ?? 0);
+    }
+  }, [user, userId]);
 
   return (
     <Layout>
