@@ -34,7 +34,7 @@ export default function Profile() {
   const { posts, pendingPosts } = usePostsUser(id, page, perPage);
 
   const { mutateFollow } = useFollow({
-    id: userId,
+    id: id,
     sessionId: sessionId,
     onSuccess: () => {
       setFollowing(!isFollowing);
@@ -43,7 +43,7 @@ export default function Profile() {
   });
 
   const { mutateunfollow } = useUnfollow({
-    id: userId,
+    id: id,
     sessionId: sessionId,
     onSuccess: () => {
       setFollowing(!isFollowing);
