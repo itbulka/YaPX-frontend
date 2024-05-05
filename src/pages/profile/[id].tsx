@@ -11,10 +11,10 @@ import { Layout } from '@/layouts';
 import { useAuthStore } from '@/store/auth';
 import { cn } from '@/utils/cn';
 
-import { useFollow } from './(hooks)/useFollow';
-import { usePostsUser } from './(hooks)/usePostsUser';
-import { useUnfollow } from './(hooks)/useUnfollow';
-import { useUser } from './(hooks)/useUser';
+import { useFollow } from './hooks/useFollow';
+import { usePostsUser } from './hooks/usePostsUser';
+import { useUnfollow } from './hooks/useUnfollow';
+import { useUser } from './hooks/useUser';
 
 export default function Profile() {
   const router = useRouter();
