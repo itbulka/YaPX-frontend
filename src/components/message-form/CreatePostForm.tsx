@@ -37,7 +37,7 @@ export default function CreatePostForm() {
         {...register('text')}
         type="text"
         placeholder="Создайте свой пост..."
-        className="h-full w-full rounded-lg border border-zinc-800 bg-zinc-900 px-2 py-1 text-white"
+        className={`w-full rounded-lg border border-zinc-800 bg-zinc-900 px-2 py-1 text-white`}
       />
       {errors.text?.message && (
         <p className="ml-4 text-[10px] text-red-500">{errors.text?.message}</p>

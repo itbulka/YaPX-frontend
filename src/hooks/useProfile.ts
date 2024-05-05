@@ -6,7 +6,7 @@ import { useAuthStore } from '@/store/auth';
 export const useProfile = () => {
   const userId = useAuthStore(state => state.userId);
 
-  const { data, status } = useQuery({
+  const { data, isSuccess } = useQuery({
     queryKey: ['profile', userId],
     queryFn: () => {
       if (userId) {
@@ -15,5 +15,5 @@ export const useProfile = () => {
     },
   });
 
-  return { data, status };
+  return { data, isSuccess };
 };

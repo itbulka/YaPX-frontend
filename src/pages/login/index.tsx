@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
+import { ArrowLeftIcon } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -53,24 +54,13 @@ export default function SignInPage() {
         onSubmit={handleSubmit(data => loginMutation.mutate(data))}
         className="flex w-full min-w-80 max-w-96 flex-col gap-4"
       >
-        <div className="flex items-center">
+        <div className="flex items-end">
           <Link href={'/'}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="h-6 w-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"
-              />
-            </svg>
+            <ArrowLeftIcon className="h-8 w-8 stroke-white" />
           </Link>
-          <span className="block w-full text-center text-2xl font-semibold">Авторизация</span>
+          <span className="block w-full text-center text-2xl font-semibold text-white">
+            Авторизация
+          </span>
           {success ? (
             <span className="mr-4 text-[10px] text-red-500">
               Ошибка в пароле или имени пользователя
@@ -79,15 +69,15 @@ export default function SignInPage() {
         </div>
 
         <div>
-          <label htmlFor="nickname" className="block pl-1 text-sm">
+          <label htmlFor="nickname" className="mb-2 block pl-1 text-sm text-white">
             Имя пользователя
           </label>
           <input
             {...register('nickname')}
             id="nickname"
-            className="w-full rounded-md border px-2 py-1 focus:border-black focus:outline-none"
             type="text"
             placeholder="ivan_ivanov"
+            className={`w-full rounded-lg border border-zinc-800 bg-zinc-900 px-2 py-1 text-white`}
           />
           {errors.nickname?.message && (
             <p className="ml-4 text-[10px] text-red-500">{errors.nickname?.message}</p>
@@ -95,15 +85,15 @@ export default function SignInPage() {
         </div>
 
         <div>
-          <label htmlFor="password" className="block pl-1 text-sm">
+          <label htmlFor="password" className="mb-2 block pl-1 text-sm text-white">
             Пароль
           </label>
           <input
             {...register('password')}
             id="password"
-            className="w-full rounded-md border px-2 py-1 focus:border-black focus:outline-none"
             type="password"
             placeholder="*****"
+            className={`w-full rounded-lg border border-zinc-800 bg-zinc-900 px-2 py-1 text-white`}
           />
           {errors.password?.message && (
             <p className="ml-4 text-[10px] text-red-500">{errors.password?.message}</p>

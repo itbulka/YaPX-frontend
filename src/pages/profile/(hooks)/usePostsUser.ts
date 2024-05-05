@@ -17,7 +17,7 @@ export const usePostsUser = (id: string, page: number, perPage: number) => {
   });
 
   useEffect(() => {
-    if (data && isSuccess) setPosts(data);
+    setPosts(data);
   }, [isSuccess]);
 
   return { posts, pendingPosts };
