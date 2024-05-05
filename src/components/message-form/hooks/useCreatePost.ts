@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { createPost } from '@/api/posts';
-import { Form } from '@/components/post/Post';
+import { Form } from '../CreatePostForm';
 
 export const useCreatePost = () => {
   const queryClient = useQueryClient();
