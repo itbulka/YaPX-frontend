@@ -3,11 +3,11 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
+import { ArrowLeftIcon } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { signUp } from '@/api/auth';
-import { ArrowLeftIcon } from 'lucide-react';
 
 const formSchema = z.object({
   name: z.string().min(1, 'Введите имя'),
@@ -52,7 +52,9 @@ export default function RegistrationForm() {
           <Link href={'/'}>
             <ArrowLeftIcon className="h-8 w-8 stroke-white" />
           </Link>
-          <span className="block w-full text-center text-2xl font-semibold">Регистрация:</span>
+          <span className="block w-full text-center text-2xl font-semibold text-white">
+            Регистрация:
+          </span>
           {success ? (
             <span className="mr-4 text-[10px] text-red-500">
               Ошибка в пароле или имени пользователя
@@ -61,7 +63,7 @@ export default function RegistrationForm() {
         </div>
 
         <div>
-          <label htmlFor="name" className="block pl-1 text-sm">
+          <label htmlFor="name" className="mb-2 block pl-1 text-sm text-white">
             Имя Фамилия
           </label>
           <input
@@ -77,7 +79,7 @@ export default function RegistrationForm() {
         </div>
 
         <div>
-          <label htmlFor="nickname" className="block pl-1 text-sm">
+          <label htmlFor="nickname" className="mb-2 block pl-1 text-sm text-white">
             Имя пользователя
           </label>
           <input
@@ -93,7 +95,7 @@ export default function RegistrationForm() {
         </div>
 
         <div>
-          <label htmlFor="password" className="block pl-1 text-sm">
+          <label htmlFor="password" className="mb-2 block pl-1 text-sm text-white">
             Пароль
           </label>
           <input
