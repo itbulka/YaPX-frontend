@@ -1,6 +1,7 @@
 import { Post, Success } from '@/models';
 
 import { URL } from '.';
+import { useAuthStore } from '@/store/auth';
 
 export type CreatePostData = {
   text: string;
@@ -28,6 +29,7 @@ export async function createPost(form: CreatePostData) {
     method: 'POST',
     headers: {
       accept: 'application/json',
+      authorization: 'Bearer ' + useAuthStore.getState().sessionId ?? '',
     },
     body: JSON.stringify(form),
   });
@@ -43,11 +45,12 @@ export async function createPost(form: CreatePostData) {
   };
 }
 
-export async function getPostsFollowing() {
-  const res = await fetch(`${URL}/followings`, {
+export async function getPostsFollowing(page: number, perPage: number) {
+  const res = await fetch(`${URL}/posts/followings?page=${page}&per-page=${perPage}&with=user&with=likes`, {
     method: 'GET',
     headers: {
       accept: 'application/json',
+      authorization: 'Bearer ' + useAuthStore.getState().sessionId ?? '',
     },
   });
 
@@ -81,9 +84,11 @@ export async function updatePostById(postId: string, form: CreatePostData) {
   const res = await fetch(`${URL}/posts/${postId}`, {
     method: 'PUT',
     headers: {
-      accept: 'application/json',
+      accept: 'application/json',     
+      authorization: 'Bearer ' + useAuthStore.getState().sessionId ?? '',
     },
     body: JSON.stringify(form),
+    
   });
 
   if (!res.ok) {
@@ -100,6 +105,7 @@ export async function deletePostById(postId: string) {
     method: 'DELETE',
     headers: {
       accept: 'application/json',
+      authorization: 'Bearer ' + useAuthStore.getState().sessionId ?? '',
     },
   });
 
@@ -117,6 +123,7 @@ export async function addLikePost(postId: string) {
     method: 'POST',
     headers: {
       accept: 'application/json',
+      authorization: 'Bearer ' + useAuthStore.getState().sessionId ?? '',
     },
   });
 
@@ -134,6 +141,7 @@ export async function removeLikePost(postId: string) {
     method: 'DELETE',
     headers: {
       accept: 'application/json',
+      authorization: 'Bearer ' + useAuthStore.getState().sessionId ?? '',
     },
   });
 

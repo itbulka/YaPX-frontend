@@ -1,124 +1,113 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation, useQuery } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { getUserById, updateUser } from '@/api/users';
+import { AuthProvider } from '@/components/auth-provider';
 import { Layout } from '@/layouts';
-import { useAuthStore } from '@/store/auth';
+
+import { useDeleteProfile } from './(hooks)/useDeleteProfile';
+import { useInitialForm } from './(hooks)/useInitialForm';
+import { useUpdateProfile } from './(hooks)/useUpdateProfile';
 
 const formSchema = z.object({
-  name: z.string().min(1, 'Введите имя'),
+  name: z.string(),
   nickname: z.string(),
   password: z.string(),
 });
 
-type Form = z.infer<typeof formSchema>;
+export type TypeUserForm = z.infer<typeof formSchema>;
 
 export default function Settings() {
-  const userId = useAuthStore(state => state.userId);
+  const { mutateUpdateProfile, pendingUpdateProfile } = useUpdateProfile();
 
-  const { data: user } = useQuery({
-    queryKey: ['user', null, userId],
-    queryFn: async () => getUserById(userId!),
-  });
-
-  const updateUserMutation = useMutation({
-    mutationFn: (form: Form) => updateUser(form),
-    onSuccess: data => {
-      console.log(data);
-    },
-    onError: err => {
-      console.log(err.message);
-    },
-  });
+  const { mutateDeleteProfile, pendingDeleteProfile } = useDeleteProfile();
 
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
-  } = useForm<Form>({
+  } = useForm<TypeUserForm>({
     resolver: zodResolver(formSchema),
   });
 
-  const handleLogout = () => {};
-
-  const handleDeleteAccount = () => {};
+  useInitialForm(reset);
 
   return (
     <Layout>
-      <div className="flex justify-center">
-        <form
-          onSubmit={handleSubmit(data => updateUserMutation.mutate(data))}
-          className="flex w-full min-w-80 max-w-96 flex-col gap-4"
-        >
-          <div>
-            <label htmlFor="password" className="block pl-1 text-sm">
-              Имя Фамилия
-            </label>
-            <input
-              {...register('name')}
-              className="w-full rounded-md border px-2 py-1 focus:border-black focus:outline-none"
-              type="text"
-              placeholder={`${user?.name ?? ''}`}
-            />
-            {errors.name?.message && (
-              <p className="ml-4 text-[10px] text-red-500">{errors.name?.message}</p>
+      <AuthProvider>
+        <div className="flex justify-center">
+          <form
+            onSubmit={handleSubmit(data =>
+              mutateUpdateProfile({
+                name: data.name,
+                nickname: data.nickname,
+                password: data.password,
+              })
             )}
-          </div>
-
-          <div>
-            <label htmlFor="password" className="block pl-1 text-sm">
-              Имя пользователя
-            </label>
-            <input
-              {...register('nickname')}
-              className="w-full rounded-md border px-2 py-1 focus:border-black focus:outline-none"
-              type="text"
-              placeholder={`${user?.nickname ?? ''}`}
-            />
-            {errors.nickname?.message && (
-              <p className="ml-4 text-[10px] text-red-500">{errors.nickname?.message}</p>
-            )}
-          </div>
-
-          <div>
-            <label htmlFor="password" className="block pl-1 text-sm">
-              Пароль
-            </label>
-            <input
-              {...register('password')}
-              className="w-full rounded-md border px-2 py-1 focus:border-black focus:outline-none"
-              type="password"
-              placeholder="******"
-            />
-            {errors.password?.message && (
-              <p className="ml-4 text-[10px] text-red-500">{errors.password?.message}</p>
-            )}
-          </div>
-
-          <button
-            className="w-full self-end rounded-md bg-sky-600 px-2 py-1 text-white "
-            type="submit"
+            className="flex w-full min-w-80 max-w-96 flex-col gap-4"
           >
-            Сохранить
-          </button>
-          <button
-            className="rounded-m w-full self-end rounded-md border border-black px-2 py-1 "
-            type="button"
-            onClick={handleLogout}
-          >
-            Выйти
-          </button>
-          <button
-            className="w-full self-end rounded-md bg-red-800 px-2 py-1 text-white "
-            type="button"
-            onClick={handleDeleteAccount}
-          >
-            Удалить аккаунт
-          </button>
-        </form>
-      </div>
+            <div>
+              <label htmlFor="password" className="mb-2 block pl-1 text-sm text-white">
+                Имя Фамилия
+              </label>
+              <input
+                {...register('name')}
+                className={`w-full rounded-lg border border-zinc-800 bg-zinc-900 px-2 py-1 text-white`}
+                type="text"
+                placeholder={`Имя Фамилия`}
+              />
+              {errors.name?.message && (
+                <p className="ml-4 text-[10px] text-red-500">{errors.name?.message}</p>
+              )}
+            </div>
+
+            <div>
+              <label htmlFor="password" className="mb-2 block pl-1 text-sm text-white">
+                Имя пользователя
+              </label>
+              <input
+                {...register('nickname')}
+                className={`w-full rounded-lg border border-zinc-800 bg-zinc-900 px-2 py-1 text-white`}
+                type="text"
+                placeholder={`Имя пользователя`}
+              />
+              {errors.nickname?.message && (
+                <p className="ml-4 text-[10px] text-red-500">{errors.nickname?.message}</p>
+              )}
+            </div>
+
+            <div>
+              <label htmlFor="password" className="mb-2 block pl-1 text-sm text-white">
+                Пароль
+              </label>
+              <input
+                {...register('password')}
+                className={`w-full rounded-lg border border-zinc-800 bg-zinc-900 px-2 py-1 text-white`}
+                type="password"
+                placeholder="******"
+              />
+              {errors.password?.message && (
+                <p className="ml-4 text-[10px] text-red-500">{errors.password?.message}</p>
+              )}
+            </div>
+
+            <button
+              className="w-ful rounded-md border border-transparent bg-zinc-900 px-2 py-2 text-white transition-colors duration-200 ease-in-out hover:border-white"
+              type="submit"
+            >
+              Сохранить
+            </button>
+            <button
+              className="w-full self-end rounded-md border border-rose-700 px-2 py-2 text-white transition-colors duration-200 ease-in-out hover:bg-rose-800"
+              type="button"
+              onClick={() => mutateDeleteProfile()}
+            >
+              Удалить аккаунт
+            </button>
+          </form>
+        </div>
+      </AuthProvider>
     </Layout>
   );
 }

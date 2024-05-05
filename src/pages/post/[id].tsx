@@ -2,10 +2,10 @@ import { useRouter } from 'next/router';
 import { useQuery } from '@tanstack/react-query';
 
 import { getPostById } from '@/api/posts';
-import { Post } from '@/components/post';
+import { Post } from '@/components/post/Post';
 import { Layout } from '@/layouts';
 
-export default function PostId() {
+export default function PostList() {
   const router = useRouter();
   const id = router.query.id;
 
@@ -16,7 +16,7 @@ export default function PostId() {
 
   return (
     <Layout>
-      <div className="flex flex-col gap-5">
+      <div className="flex flex-col justify-center gap-5">
         {status === 'pending' ? 'Loading' : null}
 
         {status === 'success' ? <Post post={posts} /> : null}
